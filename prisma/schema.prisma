@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model members {
+  id                  Int            @id @default(autoincrement())
+  name                String
+  email               String         @unique
+  password            String
+  studentId           String         @unique
+  passingYear         Int
+  department          String
+  residentialAddress  String
+  professionalAddress String
+  photo               String
+  photo_public_id     String
+  receipt             String
+  receipt_public_id   String
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @default(now())
+  Scholarships        Scholarships[]
+}
+
+model Scholarships {
+  id                    Int                      @id @default(autoincrement())
+  name                  String
+  providerId            Int
+  provider              members                  @relation(fields: [providerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  providerDescription   String
+  description           String
+  whoCanApply           String
+  whenToApply           String
+  applyLink             String?
+  ageLimit              String
+  amountDetails         String
+  createdAt             DateTime                 @default(now())
+  updatedAt             DateTime                 @default(now())
+  scholarshipApplicants ScholarshipApplication[]
+}
+
+model ScholarshipApplication {
+  id                        Int          @id @default(autoincrement())
+  scholarshipId             Int
+  scholarshipDetails        Scholarships @relation(fields: [scholarshipId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  name                      String
+  studentId                 String
+  dob                       String
+  homeContactNo             String?
+  email                     String
+  mobile                    String
+  fatherOccupation          String
+  noOfFamilyMembers         Int
+  noOfEarningMembers        Int?
+  familyIncome              Int
+  earningPerMember          Int?
+  collegeIntakeYear         Int
+  extraCurricularActivities String?
+  address                   String
+  hsPercentage              String
+  btechResults              String
+  department                String
+  achievements              String?
+  jobDetails                String?      @default("")
+  createdAt                 DateTime     @default(now())
+  updatedAt                 DateTime     @default(now())
+}
