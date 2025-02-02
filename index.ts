@@ -26,7 +26,7 @@ app.use(cors({
 
 // declare routes
 app.get('/', (req, res) => {
-    res.send('Hello World updated code done!')
+    res.send('Hello World updated!')
 })
 
 // routes 
