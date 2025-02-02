@@ -10,6 +10,9 @@ const port = process.env.PORT || 8000
 // router imports
 import AuthRoute from './router/auth.route'
 import ScholarshipRoute from './router/scholarship.route'
+import NoticeRoute from './router/notice.route';
+import { allCounts } from './controller/count.controller';
+import authentication from './middleware/authentication';
 
 // configure middlewares
 app.use(cookieParser());
@@ -29,5 +32,7 @@ app.get('/', (req, res) => {
 // routes 
 app.use('/v1/api/auth/member', AuthRoute);
 app.use('/v1/api/scholarships', ScholarshipRoute);
+app.use('/v1/api/notice', NoticeRoute);
+app.use('/v1/api/all-count', authentication, allCounts);
 
 app.listen(port, () => console.log('🚀[Server]: listening on port ' + port));

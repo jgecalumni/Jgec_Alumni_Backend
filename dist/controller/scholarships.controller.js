@@ -1,19 +1,31 @@
-import { Request, Response } from "express";
-import prisma from "../prisma";
-import { asyncHandler } from "../utils/asyncHandler";
-
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.deleteApplication = exports.applyForScholarship = exports.applicantDetails = exports.getAllScholarshipApplications = exports.deleteScholarship = exports.updateScholarship = exports.addNewScholarship = exports.getScholarshipById = exports.getAllScholarships = void 0;
+const prisma_1 = __importDefault(require("../prisma"));
+const asyncHandler_1 = require("../utils/asyncHandler");
 // all scholarships controller functions - create, update, delete and get all scholarships
-export const getAllScholarships = asyncHandler(async (req: Request, res: Response) => {
+exports.getAllScholarships = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { limit, page, search } = req.query;
-
-    const count = await prisma.scholarships.count();
-    const scholarships = await prisma.scholarships.findMany({
+    const count = yield prisma_1.default.scholarships.count();
+    const scholarships = yield prisma_1.default.scholarships.findMany({
         take: Number(limit) || 10,
         skip: (Number(page) - 1) * Number(limit) || 0,
         // search name if search keyword exist
         where: {
             name: {
-                contains: (search as string) || ""
+                contains: search || ""
             }
         },
         select: {
@@ -31,7 +43,7 @@ export const getAllScholarships = asyncHandler(async (req: Request, res: Respons
             providerDescription: true,
             description: true,
             whoCanApply: true,
-            whenToApply: true, 
+            whenToApply: true,
             ageLimit: true,
             amountDetails: true,
             scholarshipApplicants: {
@@ -47,7 +59,6 @@ export const getAllScholarships = asyncHandler(async (req: Request, res: Respons
             }
         }
     });
-
     res.status(200).json({
         message: "Scholarships fetched successfully",
         scholarships,
@@ -58,13 +69,11 @@ export const getAllScholarships = asyncHandler(async (req: Request, res: Respons
         page: Number(page) || 1,
         limit: Number(limit) || 10
     });
-});
-
-export const getScholarshipById = asyncHandler(async (req: Request, res: Response) => {
+}));
+exports.getScholarshipById = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-
     // Fetch scholarship details by scholarshipId
-    const scholarship = await prisma.scholarships.findUnique({
+    const scholarship = yield prisma_1.default.scholarships.findUnique({
         where: {
             id: Number(id)
         },
@@ -83,7 +92,7 @@ export const getScholarshipById = asyncHandler(async (req: Request, res: Respons
             providerDescription: true,
             description: true,
             whoCanApply: true,
-            whenToApply: true, 
+            whenToApply: true,
             ageLimit: true,
             amountDetails: true,
             scholarshipApplicants: {
@@ -99,24 +108,20 @@ export const getScholarshipById = asyncHandler(async (req: Request, res: Respons
             }
         }
     });
-
     // If no scholarship is found
     if (!scholarship) {
         res.status(404).json({ success: false, message: "Scholarship not found", error: true });
         return;
     }
-
     res.status(200).json({
         message: "Scholarship fetched successfully",
         data: scholarship,
         error: false,
         success: true,
     });
-});
-
-export const addNewScholarship = asyncHandler(async (req: Request, res: Response) => {
+}));
+exports.addNewScholarship = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, providerId, providerDescription, description, whoCanApply, whenToApply, ageLimit, amountDetails } = req.body;
-
     if (!(name && providerDescription && description && whoCanApply && whenToApply && ageLimit && amountDetails)) {
         res.status(400).json({
             success: false,
@@ -125,11 +130,9 @@ export const addNewScholarship = asyncHandler(async (req: Request, res: Response
         });
         return;
     }
-
     // Check if scholarship already exists
     const updateName = String(name).toLowerCase().trim();
-    const isExist = await prisma.scholarships.findFirst({ where: { name: updateName } });
-
+    const isExist = yield prisma_1.default.scholarships.findFirst({ where: { name: updateName } });
     if (isExist) {
         res.status(400).json({
             success: false,
@@ -138,16 +141,15 @@ export const addNewScholarship = asyncHandler(async (req: Request, res: Response
         });
         return;
     }
-
     // Create new scholarship
-    const newScholarship = await prisma.scholarships.create({
+    const newScholarship = yield prisma_1.default.scholarships.create({
         data: {
             name: updateName,
             providerId: parseInt(providerId),
             providerDescription,
             description,
             whoCanApply,
-            whenToApply, 
+            whenToApply,
             ageLimit,
             amountDetails
         },
@@ -166,24 +168,21 @@ export const addNewScholarship = asyncHandler(async (req: Request, res: Response
             providerDescription: true,
             description: true,
             whoCanApply: true,
-            whenToApply: true, 
+            whenToApply: true,
             ageLimit: true,
             amountDetails: true
         }
     });
-
     res.status(201).json({
         message: "Scholarship added successfully",
         data: newScholarship,
         error: false,
         success: true
     });
-});
-
-export const updateScholarship = asyncHandler(async (req: Request, res: Response) => {
+}));
+exports.updateScholarship = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, providerId, providerDescription, description, whoCanApply, whenToApply, ageLimit, amountDetails } = req.body;
     const { id } = req.params;
-
     //  Check if all required fields are provided
     if (!(name && providerDescription && description && whoCanApply && whenToApply && ageLimit && amountDetails)) {
         res.status(400).json({
@@ -193,9 +192,8 @@ export const updateScholarship = asyncHandler(async (req: Request, res: Response
         });
         return;
     }
-
     // Check if scholarship already exists 
-    const isExist = await prisma.scholarships.findFirst({ where: { id: parseInt(id) } });
+    const isExist = yield prisma_1.default.scholarships.findFirst({ where: { id: parseInt(id) } });
     if (!isExist) {
         res.status(404).json({
             success: false,
@@ -204,9 +202,8 @@ export const updateScholarship = asyncHandler(async (req: Request, res: Response
         });
         return;
     }
-
     // Update scholarship
-    const updatedScholarship = await prisma.scholarships.update({
+    const updatedScholarship = yield prisma_1.default.scholarships.update({
         where: { id: parseInt(id) },
         data: {
             name,
@@ -214,7 +211,7 @@ export const updateScholarship = asyncHandler(async (req: Request, res: Response
             providerDescription,
             description,
             whoCanApply,
-            whenToApply, 
+            whenToApply,
             ageLimit,
             amountDetails
         },
@@ -233,26 +230,22 @@ export const updateScholarship = asyncHandler(async (req: Request, res: Response
             providerDescription: true,
             description: true,
             whoCanApply: true,
-            whenToApply: true, 
+            whenToApply: true,
             ageLimit: true,
             amountDetails: true
         }
     });
-
     res.status(201).json({
         message: "Scholarship updated successfully",
         data: updatedScholarship,
         error: false,
         success: true
     });
-});
-
-export const deleteScholarship = asyncHandler(async (req: Request, res: Response) => {
+}));
+exports.deleteScholarship = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-
     // Check if scholarship already exists
-    const isExist = await prisma.scholarships.findFirst({ where: { id: Number(id) } });
-
+    const isExist = yield prisma_1.default.scholarships.findFirst({ where: { id: Number(id) } });
     if (!isExist) {
         res.status(404).json({
             success: false,
@@ -261,31 +254,27 @@ export const deleteScholarship = asyncHandler(async (req: Request, res: Response
         });
         return;
     }
-
     // Delete scholarship
-    await prisma.scholarships.delete({ where: { id: Number(id) } });
-
+    yield prisma_1.default.scholarships.delete({ where: { id: Number(id) } });
     res.status(200).json({
         message: "Scholarship deleted successfully",
         error: false,
         success: true
     });
-});
-
+}));
 // apply for scholarship controller functions - create, update, delete and get all applications
-
-export const getAllScholarshipApplications = asyncHandler(async (req: Request, res: Response) => {
+exports.getAllScholarshipApplications = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { limit, page, search, scholarshipId } = req.query;
-    const totalCount = await prisma.scholarshipApplication.count();
-    const allApplications = await prisma.scholarshipApplication.findMany({
+    const totalCount = yield prisma_1.default.scholarshipApplication.count();
+    const allApplications = yield prisma_1.default.scholarshipApplication.findMany({
         take: Number(limit) || 10,
         skip: (Number(page) - 1) * Number(limit) || 0,
         where: {
             scholarshipId: {
-                equals: parseInt(scholarshipId as string) || 0
+                equals: parseInt(scholarshipId) || 0
             },
             name: {
-                contains: (search as string) || "",
+                contains: search || "",
             }
         },
         select: {
@@ -326,7 +315,6 @@ export const getAllScholarshipApplications = asyncHandler(async (req: Request, r
             }
         }
     });
-
     res.status(200).json({
         message: "Scholarship applications fetched successfully",
         data: allApplications,
@@ -337,11 +325,10 @@ export const getAllScholarshipApplications = asyncHandler(async (req: Request, r
         page: Number(page) || 1,
         limit: Number(limit) || 10
     });
-});
-
-export const applicantDetails = asyncHandler(async (req: Request, res: Response) => {
+}));
+exports.applicantDetails = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const applicant = await prisma.scholarshipApplication.findFirst({
+    const applicant = yield prisma_1.default.scholarshipApplication.findFirst({
         where: { id: parseInt(id) },
         select: {
             id: true,
@@ -381,7 +368,6 @@ export const applicantDetails = asyncHandler(async (req: Request, res: Response)
             }
         }
     });
-
     if (!applicant) {
         res.status(404).json({
             success: false,
@@ -390,39 +376,16 @@ export const applicantDetails = asyncHandler(async (req: Request, res: Response)
         });
         return;
     }
-
     res.status(200).json({
         message: "Applicant details fetched successfully",
         data: applicant,
         error: false,
         success: true
     });
-});
-
-export const applyForScholarship = asyncHandler(async (req: Request, res: Response) => {
-    const {
-        name,
-        scholarshipId,
-        studentId,
-        dob,
-        homeContactNo,
-        email,
-        mobile,
-        fatherOccupation,
-        noOfFamilyMembers,
-        noOfEarningMembers,
-        familyIncome,
-        earningPerMember,
-        collegeIntakeYear,
-        extraCurricularActivities,
-        address,
-        hsPercentage,
-        btechResults, // "1st sem: 8.5, 2nd sem: 8.5, 3rd sem: 8.5, 4th sem: 8.5, 5th sem: 8.5, 6th sem: 8.5, 7th sem: 8.5, 8th sem: 8.5"
-        department,
-        achievements,
-        jobDetails,
-    } = req.body;
-
+}));
+exports.applyForScholarship = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { name, scholarshipId, studentId, dob, homeContactNo, email, mobile, fatherOccupation, noOfFamilyMembers, noOfEarningMembers, familyIncome, earningPerMember, collegeIntakeYear, extraCurricularActivities, address, hsPercentage, btechResults, // "1st sem: 8.5, 2nd sem: 8.5, 3rd sem: 8.5, 4th sem: 8.5, 5th sem: 8.5, 6th sem: 8.5, 7th sem: 8.5, 8th sem: 8.5"
+    department, achievements, jobDetails, } = req.body;
     // Check if all required fields are provided
     if (!(name && scholarshipId && studentId && dob && email && mobile && fatherOccupation && noOfFamilyMembers && familyIncome && earningPerMember && collegeIntakeYear && address && hsPercentage && btechResults && department)) {
         res.status(400).json({
@@ -432,9 +395,8 @@ export const applyForScholarship = asyncHandler(async (req: Request, res: Respon
         });
         return;
     }
-
     // Check if user already applied for scholarship
-    const isExist = await prisma.scholarships.findFirst({
+    const isExist = yield prisma_1.default.scholarships.findFirst({
         where: {
             scholarshipApplicants: {
                 some: {
@@ -442,8 +404,7 @@ export const applyForScholarship = asyncHandler(async (req: Request, res: Respon
                 }
             }
         }
-    })
-
+    });
     if (isExist) {
         res.status(400).json({
             success: false,
@@ -452,9 +413,8 @@ export const applyForScholarship = asyncHandler(async (req: Request, res: Respon
         });
         return;
     }
-
     // Create new scholarship application
-    const newScholarshipApplication = await prisma.scholarshipApplication.create({
+    const newScholarshipApplication = yield prisma_1.default.scholarshipApplication.create({
         data: {
             name,
             scholarshipId: parseInt(scholarshipId),
@@ -515,21 +475,19 @@ export const applyForScholarship = asyncHandler(async (req: Request, res: Respon
             }
         }
     });
-
     res.status(201).json({
         message: "Scholarship applied successfully",
         data: newScholarshipApplication,
         error: false,
         success: true
     });
-})
-
-export const deleteApplication = asyncHandler(async (req: Request, res: Response) => {
+}));
+exports.deleteApplication = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    await prisma.scholarshipApplication.delete({ where: { id: parseInt(id) } });
+    yield prisma_1.default.scholarshipApplication.delete({ where: { id: parseInt(id) } });
     res.status(200).json({
         message: "Application deleted successfully",
         error: false,
         success: true
     });
-});
+}));

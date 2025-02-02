@@ -34,16 +34,15 @@ model members {
 
 model Scholarships {
   id                    Int                      @id @default(autoincrement())
-  name                  String
+  name                  String                   @db.VarChar(200)
   providerId            Int
   provider              members                  @relation(fields: [providerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  providerDescription   String
-  description           String
-  whoCanApply           String
-  whenToApply           String
-  applyLink             String?
-  ageLimit              String
-  amountDetails         String
+  providerDescription   String                   @db.Text
+  description           String                   @db.Text
+  whoCanApply           String                   @db.VarChar(500)
+  whenToApply           String                   @db.VarChar(500)
+  ageLimit              String                   @db.VarChar(500)
+  amountDetails         String                   @db.VarChar(500)
   createdAt             DateTime                 @default(now())
   updatedAt             DateTime                 @default(now())
   scholarshipApplicants ScholarshipApplication[]
@@ -74,4 +73,15 @@ model ScholarshipApplication {
   jobDetails                String?      @default("")
   createdAt                 DateTime     @default(now())
   updatedAt                 DateTime     @default(now())
+}
+
+model Notice {
+  id             Int      @id @default(autoincrement())
+  title          String
+  description    String
+  date           String
+  link           String?
+  link_public_id String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now())
 }
