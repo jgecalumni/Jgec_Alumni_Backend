@@ -66,12 +66,12 @@ export const adminLogin = asyncHandler(async (req: Request, res: Response) => {
 
     const response = res.cookie(
         "token",
-        accessToken,
-        {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-        }
+        accessToken
+        // {
+        //     httpOnly: true,
+        //     secure: false,
+        //     sameSite: 'none',
+        // }
     );
 
     response.status(200).json({
