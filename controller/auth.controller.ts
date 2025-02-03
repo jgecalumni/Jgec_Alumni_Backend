@@ -144,7 +144,7 @@ export const registerMember = asyncHandler(async (req: Request, res: Response) =
         accessToken,
         {
             httpOnly: true,
-            secure: true,
+            // secure: true,
             sameSite: 'none',
         }
     );
