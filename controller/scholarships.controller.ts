@@ -34,6 +34,7 @@ export const getAllScholarships = asyncHandler(async (req: Request, res: Respons
             whenToApply: true, 
             ageLimit: true,
             amountDetails: true,
+            semRequire: true,
             scholarshipApplicants: {
                 select: {
                     id: true,
@@ -86,6 +87,7 @@ export const getScholarshipById = asyncHandler(async (req: Request, res: Respons
             whenToApply: true, 
             ageLimit: true,
             amountDetails: true,
+            semRequire: true,
             scholarshipApplicants: {
                 select: {
                     id: true,
@@ -115,9 +117,9 @@ export const getScholarshipById = asyncHandler(async (req: Request, res: Respons
 });
 
 export const addNewScholarship = asyncHandler(async (req: Request, res: Response) => {
-    const { name, providerId, providerDescription, description, whoCanApply, whenToApply, ageLimit, amountDetails } = req.body;
+    const { name, providerId, providerDescription, description, whoCanApply, whenToApply, ageLimit, amountDetails, semRequire } = req.body;
 
-    if (!(name && providerDescription && description && whoCanApply && whenToApply && ageLimit && amountDetails)) {
+    if (!(name && providerDescription && description && whoCanApply && whenToApply && ageLimit && amountDetails && semRequire)) {
         res.status(400).json({
             success: false,
             message: "Please provide all required fields",
@@ -149,7 +151,8 @@ export const addNewScholarship = asyncHandler(async (req: Request, res: Response
             whoCanApply,
             whenToApply, 
             ageLimit,
-            amountDetails
+            amountDetails,
+            semRequire
         },
         select: {
             id: true,
@@ -168,7 +171,8 @@ export const addNewScholarship = asyncHandler(async (req: Request, res: Response
             whoCanApply: true,
             whenToApply: true, 
             ageLimit: true,
-            amountDetails: true
+            amountDetails: true,
+            semRequire: true
         }
     });
 
@@ -181,11 +185,11 @@ export const addNewScholarship = asyncHandler(async (req: Request, res: Response
 });
 
 export const updateScholarship = asyncHandler(async (req: Request, res: Response) => {
-    const { name, providerId, providerDescription, description, whoCanApply, whenToApply, ageLimit, amountDetails } = req.body;
+    const { name, providerId, providerDescription, description, whoCanApply, whenToApply, ageLimit, amountDetails, semRequire } = req.body;
     const { id } = req.params;
 
     //  Check if all required fields are provided
-    if (!(name && providerDescription && description && whoCanApply && whenToApply && ageLimit && amountDetails)) {
+    if (!(name && providerDescription && description && whoCanApply && whenToApply && ageLimit && amountDetails && semRequire)) {
         res.status(400).json({
             success: false,
             message: "Please provide all required fields",
@@ -216,7 +220,8 @@ export const updateScholarship = asyncHandler(async (req: Request, res: Response
             whoCanApply,
             whenToApply, 
             ageLimit,
-            amountDetails
+            amountDetails,
+            semRequire
         },
         select: {
             id: true,
@@ -235,7 +240,8 @@ export const updateScholarship = asyncHandler(async (req: Request, res: Response
             whoCanApply: true,
             whenToApply: true, 
             ageLimit: true,
-            amountDetails: true
+            amountDetails: true,
+            semRequire: true
         }
     });
 
