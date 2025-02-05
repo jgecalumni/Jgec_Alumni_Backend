@@ -35,6 +35,7 @@ model members {
 model Scholarships {
   id                    Int                      @id @default(autoincrement())
   name                  String                   @db.VarChar(200)
+  subtitle              String                   @db.VarChar(200)
   providerId            Int
   provider              members                  @relation(fields: [providerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   providerDescription   String                   @db.Text
