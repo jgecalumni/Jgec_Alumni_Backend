@@ -259,3 +259,69 @@ export const updateEvent = asyncHandler(async (req: Request, res: Response) => {
 		success: true,
 	});
 });
+
+export const deleteEvent = asyncHandler(async (req: Request, res: Response) => {
+	const { id } = req.params;
+	const event = await prisma.event.findUnique({ where: { id: parseInt(id) } });
+	if (!event) {
+		res.status(404).json({
+			message: "Event not found",
+			data: [],
+			error: true,
+			success: false,
+		});
+		return;
+	}
+	const deletedEvent = await prisma.event.delete({
+		where: { id: parseInt(id) },
+	});
+	res.status(200).json({
+		message: "Event deleted successfully",
+		error: false,
+		success: true,
+	});
+});
+
+export const getEventByID = asyncHandler(
+	async (req: Request, res: Response) => {
+		const { id } = req.params;
+		const event = await prisma.event.findUnique({
+			where: { id: parseInt(id) },
+			select: {
+				id: true,
+				name: true,
+				shortDescription: true,
+				details: true,
+				event_thumbnail: true,
+				date: true,
+				time: true,
+				location: true,
+				hostName: true,
+				hostDetails: true,
+				schedule: {
+					select: {
+						id: true,
+						startTime: true,
+						endTime: true,
+						activity: true,
+					},
+				},
+			},
+		});
+		if (!event) {
+			res.status(404).json({
+				message: "Event not found",
+				data: [],
+				error: true,
+				success: false,
+			});
+			return;
+		}
+		res.status(200).json({
+			message: "Event found",
+			data: event,
+			error: false,
+			success: true,
+		});
+	}
+);
