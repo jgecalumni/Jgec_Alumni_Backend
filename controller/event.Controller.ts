@@ -150,3 +150,112 @@ export const getAllEvents = asyncHandler(
 		});
 	}
 );
+
+export const updateEvent = asyncHandler(async (req: Request, res: Response) => {
+	const {
+		name,
+		shortDescription,
+		details,
+		event_thumbnail,
+		date,
+		time,
+		location,
+		hostName,
+		hostDetails,
+		schedule,
+	} = req.body;
+
+	const { id } = req.params;
+
+	if (
+		!(
+			name &&
+			shortDescription &&
+			details &&
+			event_thumbnail &&
+			date &&
+			time &&
+			location &&
+			hostName &&
+			hostDetails
+		)
+	) {
+		res.status(400).json({
+			success: false,
+			message: "Please provide all required fields",
+			error: true,
+		});
+		return;
+	}
+
+	const isExist = await prisma.event.findFirst({ where: { id: parseInt(id) } });
+	if (!isExist) {
+		res
+			.status(404)
+			.json({ success: false, message: "Event not found", error: true });
+		return;
+	}
+
+	const updateEvent = await prisma.event.update({
+		where: { id: parseInt(id) },
+		data: {
+			name,
+			shortDescription,
+			details,
+			event_thumbnail,
+			date,
+			time,
+			location,
+			hostName,
+			hostDetails,
+		},
+	});
+
+	for (const scheduleItem of schedule) {
+		await prisma.eventSchedule.upsert({
+			where: {
+				id: parseInt(scheduleItem.id) || 0,
+			},
+			update: {
+				startTime: scheduleItem.startTime,
+				endTime: scheduleItem.endTime,
+				activity: scheduleItem.activity,
+			},
+			create: {
+				eventId: parseInt(id),
+				startTime: scheduleItem.startTime,
+				endTime: scheduleItem.endTime,
+				activity: scheduleItem.activity,
+			},
+		});
+	}
+	const eventWithSchedule = await prisma.event.findUnique({
+		where: { id: parseInt(id) },
+		select: {
+			id: true,
+			name: true,
+			shortDescription: true,
+			details: true,
+			event_thumbnail: true,
+			date: true,
+			time: true,
+			location: true,
+			hostName: true,
+			hostDetails: true,
+			schedule: {
+				select: {
+					id: true,
+					startTime: true,
+					endTime: true,
+					activity: true,
+				},
+			},
+		},
+	});
+	res.status(201).json({
+		message: "Event updated successfully",
+		data: eventWithSchedule,
+		error: false,
+		success: true,
+	});
+});
