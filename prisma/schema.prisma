@@ -35,7 +35,7 @@ model members {
 model Scholarships {
   id                    Int                      @id @default(autoincrement())
   name                  String                   @db.VarChar(200)
-  subtitle              String                   @db.VarChar(200)
+  subtitle              String                   @default("") @db.VarChar(200)
   providerId            Int
   provider              members                  @relation(fields: [providerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   providerDescription   String                   @db.Text
@@ -86,4 +86,31 @@ model Notice {
   link_public_id String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @default(now())
+}
+
+model Event {
+  id               Int             @id @default(autoincrement())
+  name             String          @db.VarChar(500)
+  shortDescription String          @db.VarChar(500)
+  details          String          @db.VarChar(500)
+  event_thumbnail  String          @db.VarChar(500)
+  date             String
+  time             String
+  location         String          @db.VarChar(500)
+  hostName         String
+  hostDetails      String
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @default(now())
+  schedule         EventSchedule[]
+}
+
+model EventSchedule {
+  id        Int      @id @default(autoincrement())
+  eventId   Int     
+  Event     Event?   @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  startTime String
+  endTime   String
+  activity  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 }
