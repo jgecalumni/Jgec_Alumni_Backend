@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import prisma from "../prisma";
+import { uploadOnCloudinary } from "../utils/cloudinary";
 
 export const addNewEvent = asyncHandler(async (req: Request, res: Response) => {
 	const {
 		name,
 		shortDescription,
 		details,
-		event_thumbnail,
 		date,
 		time,
 		location,
@@ -16,6 +16,11 @@ export const addNewEvent = asyncHandler(async (req: Request, res: Response) => {
 		schedule,
 	} = req.body;
 
+	const event_thumbnail  = (req as any).file;
+    console.log(req.body);
+	console.log(event_thumbnail);
+	
+	
 	if (
 		!(
 			name &&
@@ -36,6 +41,22 @@ export const addNewEvent = asyncHandler(async (req: Request, res: Response) => {
 		});
 		return;
 	}
+	
+	
+
+	if (event_thumbnail && event_thumbnail.size > 2 * 1024 * 1024) {
+		res.status(400).json({
+			success: false,
+			message: "File size must be less than 2MB",
+			error: true,
+		});
+		return;
+	}
+
+	let fileLink = null;
+	if (event_thumbnail) {
+		fileLink = await uploadOnCloudinary(event_thumbnail.path);
+	}
 
 	//Create new event
 	const newEvent = await prisma.event.create({
@@ -43,7 +64,8 @@ export const addNewEvent = asyncHandler(async (req: Request, res: Response) => {
 			name,
 			shortDescription,
 			details,
-			event_thumbnail,
+			event_thumbnail: fileLink?.url || "",
+			event_thumbnail_id: fileLink?.public_id || "",
 			date,
 			time,
 			location,
@@ -56,6 +78,7 @@ export const addNewEvent = asyncHandler(async (req: Request, res: Response) => {
 			shortDescription: true,
 			details: true,
 			event_thumbnail: true,
+			event_thumbnail_id: true,
 			date: true,
 			time: true,
 			location: true,
@@ -107,7 +130,7 @@ export const getAllEvents = asyncHandler(
 		const { limit, page, search } = req.query;
 
 		const count = await prisma.event.count();
-		const scholarships = await prisma.event.findMany({
+		const events = await prisma.event.findMany({
 			take: Number(limit) || 10,
 			skip: (Number(page) - 1) * Number(limit) || 0,
 			// search name if search keyword exist
@@ -140,7 +163,7 @@ export const getAllEvents = asyncHandler(
 
 		res.status(200).json({
 			message: "Events fetched successfully",
-			scholarships,
+			events,
 			error: false,
 			success: true,
 			docCount: count,

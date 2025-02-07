@@ -89,24 +89,25 @@ model Notice {
 }
 
 model Event {
-  id               Int             @id @default(autoincrement())
-  name             String          @db.VarChar(500)
-  shortDescription String          @db.VarChar(500)
-  details          String          @db.VarChar(500)
-  event_thumbnail  String          @db.VarChar(500)
-  date             String
-  time             String
-  location         String          @db.VarChar(500)
-  hostName         String
-  hostDetails      String
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @default(now())
-  schedule         EventSchedule[]
+  id                 Int             @id @default(autoincrement())
+  name               String          @db.VarChar(500)
+  shortDescription   String          @db.VarChar(500)
+  details            String          @db.VarChar(500)
+  event_thumbnail    String          @db.VarChar(500)
+  event_thumbnail_id String?         @default("")
+  date               String
+  time               String
+  location           String          @db.VarChar(500)
+  hostName           String
+  hostDetails        String
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @default(now())
+  schedule           EventSchedule[]
 }
 
 model EventSchedule {
   id        Int      @id @default(autoincrement())
-  eventId   Int     
+  eventId   Int
   Event     Event?   @relation(fields: [eventId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   startTime String
   endTime   String
