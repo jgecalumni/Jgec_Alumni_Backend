@@ -61,9 +61,7 @@ export const noticeDetails = asyncHandler(async (req: Request, res: Response) =>
 
 export const createNewNotice = asyncHandler(async (req: Request, res: Response) => {
     const { title, description, date } = req.body;
-    const file = (req as any).file;
-    console.log(req.body);
-    
+    const file = (req as any).file;   
     
 
     if (!(title && description && date)) {

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import prisma from "../prisma";
-import { uploadOnCloudinary } from "../utils/cloudinary";
+import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary";
 
 export const addNewEvent = asyncHandler(async (req: Request, res: Response) => {
 	const {
@@ -16,17 +16,13 @@ export const addNewEvent = asyncHandler(async (req: Request, res: Response) => {
 		schedule,
 	} = req.body;
 
-	const event_thumbnail  = (req as any).file;
-    console.log(req.body);
-	console.log(event_thumbnail);
-	
-	
+	const event_thumbnail = (req as any).file;
+	const schedules = JSON.parse(schedule || "[]");
 	if (
 		!(
 			name &&
 			shortDescription &&
 			details &&
-			event_thumbnail &&
 			date &&
 			time &&
 			location &&
@@ -41,8 +37,6 @@ export const addNewEvent = asyncHandler(async (req: Request, res: Response) => {
 		});
 		return;
 	}
-	
-	
 
 	if (event_thumbnail && event_thumbnail.size > 2 * 1024 * 1024) {
 		res.status(400).json({
@@ -72,21 +66,8 @@ export const addNewEvent = asyncHandler(async (req: Request, res: Response) => {
 			hostName,
 			hostDetails,
 		},
-		select: {
-			id: true,
-			name: true,
-			shortDescription: true,
-			details: true,
-			event_thumbnail: true,
-			event_thumbnail_id: true,
-			date: true,
-			time: true,
-			location: true,
-			hostName: true,
-			hostDetails: true,
-		},
 	});
-	for (const scheduleItem of schedule) {
+	for (const scheduleItem of schedules) {
 		const newSchedule = await prisma.eventSchedule.create({
 			data: {
 				eventId: newEvent.id,
@@ -298,6 +279,9 @@ export const deleteEvent = asyncHandler(async (req: Request, res: Response) => {
 	const deletedEvent = await prisma.event.delete({
 		where: { id: parseInt(id) },
 	});
+	const deleteThumbnail = await deleteFromCloudinary(
+		event.event_thumbnail_id || ""
+	);
 	res.status(200).json({
 		message: "Event deleted successfully",
 		error: false,

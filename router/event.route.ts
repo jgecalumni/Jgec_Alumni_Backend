@@ -7,13 +7,14 @@ import {
 	getEventByID,
 	updateEvent,
 } from "../controller/event.Controller";
+import { upload } from "../middleware/photo-upload";
 
 const router = express.Router();
 
-router.route("/add").post(addNewEvent);
+router.route("/add").post(upload.single('event_thumbnail'),addNewEvent);
 router.route("/").get(getAllEvents);
 router.route("/update/:id").patch(updateEvent);
-router.route("/delete/:id").delete(deleteEvent);
+router.route("/delete/:id").delete(authentication,deleteEvent);
 router.route("/:id").get(getEventByID);
 
 export default router;
