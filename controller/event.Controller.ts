@@ -160,7 +160,6 @@ export const updateEvent = asyncHandler(async (req: Request, res: Response) => {
 		name,
 		shortDescription,
 		details,
-		event_thumbnail,
 		date,
 		time,
 		location,
@@ -168,6 +167,10 @@ export const updateEvent = asyncHandler(async (req: Request, res: Response) => {
 		hostDetails,
 		schedule,
 	} = req.body;
+	
+	const schedules = JSON.parse(schedule || "[]");
+
+	const event_thumbnail = (req as any).file;
 
 	const { id } = req.params;
 
@@ -176,7 +179,6 @@ export const updateEvent = asyncHandler(async (req: Request, res: Response) => {
 			name &&
 			shortDescription &&
 			details &&
-			event_thumbnail &&
 			date &&
 			time &&
 			location &&
@@ -199,6 +201,24 @@ export const updateEvent = asyncHandler(async (req: Request, res: Response) => {
 			.json({ success: false, message: "Event not found", error: true });
 		return;
 	}
+	
+
+	if (event_thumbnail && event_thumbnail.size > 2 * 1024 * 1024) {
+		res.status(400).json({
+			success: false,
+			message: "File size must be less than 2MB",
+			error: true,
+		});
+		return;
+	}
+
+	let fileLink = null;
+    if (event_thumbnail) {
+        if (isExist.event_thumbnail_id) {
+            await deleteFromCloudinary(isExist.event_thumbnail_id);
+        }
+        fileLink = await uploadOnCloudinary(event_thumbnail.path);
+    }
 
 	const updateEvent = await prisma.event.update({
 		where: { id: parseInt(id) },
@@ -206,7 +226,8 @@ export const updateEvent = asyncHandler(async (req: Request, res: Response) => {
 			name,
 			shortDescription,
 			details,
-			event_thumbnail,
+			event_thumbnail: fileLink?.url || "",
+			event_thumbnail_id: fileLink?.public_id || "",
 			date,
 			time,
 			location,
@@ -215,7 +236,7 @@ export const updateEvent = asyncHandler(async (req: Request, res: Response) => {
 		},
 	});
 
-	for (const scheduleItem of schedule) {
+	for (const scheduleItem of schedules) {
 		await prisma.eventSchedule.upsert({
 			where: {
 				id: parseInt(scheduleItem.id) || 0,
