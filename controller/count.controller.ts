@@ -8,7 +8,7 @@ export const allCounts = asyncHandler(async (req: Request, res: Response) => {
     const scholarships = await prisma.scholarships.count();
     const notices = await prisma.notice.count(); 
     const gallery = 0;
-    const events = 0;
+    const events = await prisma.event.count();
     res.status(200).json({
         message: "Counts fetched successfully",
         data: { members, scholarships, notices, gallery, events },
