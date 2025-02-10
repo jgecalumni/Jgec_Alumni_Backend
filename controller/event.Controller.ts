@@ -167,7 +167,7 @@ export const updateEvent = asyncHandler(async (req: Request, res: Response) => {
 		hostDetails,
 		schedule,
 	} = req.body;
-	
+
 	const schedules = JSON.parse(schedule || "[]");
 
 	const event_thumbnail = (req as any).file;
@@ -201,7 +201,6 @@ export const updateEvent = asyncHandler(async (req: Request, res: Response) => {
 			.json({ success: false, message: "Event not found", error: true });
 		return;
 	}
-	
 
 	if (event_thumbnail && event_thumbnail.size > 2 * 1024 * 1024) {
 		res.status(400).json({
@@ -211,14 +210,19 @@ export const updateEvent = asyncHandler(async (req: Request, res: Response) => {
 		});
 		return;
 	}
+	let fileLinkExist = "",fileLinkExistId = null;
+	if (!event_thumbnail) {
+		fileLinkExist = isExist.event_thumbnail;
+		fileLinkExistId = isExist.event_thumbnail_id
+	}
 
 	let fileLink = null;
-    if (event_thumbnail) {
-        if (isExist.event_thumbnail_id) {
-            await deleteFromCloudinary(isExist.event_thumbnail_id);
-        }
-        fileLink = await uploadOnCloudinary(event_thumbnail.path);
-    }
+	if (event_thumbnail) {
+		if (isExist.event_thumbnail_id) {
+			await deleteFromCloudinary(isExist.event_thumbnail_id);
+		}
+		fileLink = await uploadOnCloudinary(event_thumbnail.path);
+	}
 
 	const updateEvent = await prisma.event.update({
 		where: { id: parseInt(id) },
@@ -226,8 +230,8 @@ export const updateEvent = asyncHandler(async (req: Request, res: Response) => {
 			name,
 			shortDescription,
 			details,
-			event_thumbnail: fileLink?.url || "",
-			event_thumbnail_id: fileLink?.public_id || "",
+			event_thumbnail: fileLink?.url || fileLinkExist,
+			event_thumbnail_id: fileLink?.public_id || fileLinkExistId,
 			date,
 			time,
 			location,
