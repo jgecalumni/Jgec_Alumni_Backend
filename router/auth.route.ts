@@ -1,11 +1,12 @@
 import express from "express";
 import {
-    adminLogin,
-    allMembers,
-    loginMember,
-    logout,
-    memberDetails,
-    registerMember,
+	adminLogin,
+	allMembers,
+	loginMember,
+	logout,
+	memberDetails,
+	registerMember,
+	updateMemeber,
 } from "../controller/auth.controller";
 import { upload } from "../middleware/photo-upload";
 import authentication from "../middleware/authentication";
@@ -13,16 +14,26 @@ import authentication from "../middleware/authentication";
 const router = express.Router();
 
 router.route("/register").post(
-    upload.fields([
-        { name: "photo", maxCount: 1 },
-        { name: "receipt", maxCount: 1 },
-    ]),
-    registerMember
+	upload.fields([
+		{ name: "photo", maxCount: 1 },
+		{ name: "receipt", maxCount: 1 },
+	]),
+	registerMember
 );
-router.route('/admin/login').post(adminLogin);
+router.route("/admin/login").post(adminLogin);
 router.route("/login").post(loginMember);
-router.route('/logout').get(logout);
-router.route('/').get(authentication, allMembers);
+router.route("/logout").get(logout);
+router.route("/").get(authentication, allMembers);
 router.route("/profile/:id").get(authentication, memberDetails);
+router.route("/update/:id").patch(
+	authentication,
+	upload.fields([
+		{
+			name: "photo",
+			maxCount: 1,
+		},
+	]),
+	updateMemeber
+);
 
 export default router;

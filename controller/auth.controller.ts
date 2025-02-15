@@ -5,7 +5,7 @@ import { Request, Response } from "express";
 import prisma from "../prisma";
 import { sendMail } from "../utils/mailer";
 import { WelcomeMail } from "../utils/mail-templates";
-import { uploadOnCloudinary } from "../utils/cloudinary";
+import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary";
 
 interface FileType {
 	fieldname: string;
@@ -206,9 +206,8 @@ export const loginMember = asyncHandler(async (req: Request, res: Response) => {
 	}
 
 	// Check if password is correct or not
-	const isCorrectPass =await bcrypt.compare(password, member.password);
-    
-    
+	const isCorrectPass = await bcrypt.compare(password, member.password);
+
 	if (!isCorrectPass) {
 		res.status(401).json({
 			message: "Invalid credentials",
@@ -220,7 +219,12 @@ export const loginMember = asyncHandler(async (req: Request, res: Response) => {
 
 	// generate token & cookies
 	const accessToken = jwt.sign(
-		{ userId: member.id, email: member.email, name: member.name },
+		{
+			userId: member.id,
+			userPhoto: member.photo,
+			email: member.email,
+			name: member.name,
+		},
 		process.env.JWT_SECRET as string,
 		{ expiresIn: "1D" }
 	);
@@ -304,6 +308,103 @@ export const memberDetails = asyncHandler(
 
 		res.status(200).json({
 			data: member,
+			error: false,
+			success: true,
+		});
+	}
+);
+
+export const updateMemeber = asyncHandler(
+	async (req: Request, res: Response) => {
+		const {
+			name,
+			email,
+			password,
+			studentId,
+			passingYear,
+			department,
+			residentialAddress,
+			professionalAddress,
+		} = req.body;
+		console.log(req.body);
+		
+		
+		const photo = (req as any).file;
+		const { id } = req.params;
+
+		if (
+			!(
+				name &&
+				email &&
+				studentId &&
+				passingYear &&
+				department &&
+				residentialAddress &&
+				professionalAddress
+			)
+		) {
+			res.status(400).json({
+				success: false,
+				message: "Please provide all required fields",
+				error: true,
+			});
+			return;
+		}
+
+		const isExist = await prisma.members.findFirst({
+			where: { id: parseInt(id) },
+		});
+		if (!isExist) {
+			res
+				.status(404)
+				.json({ success: false, message: "Event not found", error: true });
+			return;
+		}
+
+		if (photo && photo.size > 2 * 1024 * 1024) {
+			res.status(400).json({
+				success: false,
+				message: "File size must be less than 2MB",
+				error: true,
+			});
+			return;
+		}
+		let fileLinkExist = isExist.photo || "";
+		let fileLinkExistId = isExist.photo_public_id || "";
+		let fileLink = null;
+
+		if (photo) {
+			if (isExist.photo_public_id) {
+				await deleteFromCloudinary(isExist.photo_public_id);
+			}
+			fileLink = await uploadOnCloudinary(photo.path);
+		}
+
+		let updatedPassword = isExist.password; 
+
+		if (password) {
+			updatedPassword = await bcrypt.hash(password,10);
+		}
+
+		const updateMember = await prisma.members.update({
+			where: { id: parseInt(id) },
+			data: {
+				name,
+				email,
+				password: updatedPassword,
+				studentId,
+				passingYear: parseInt(passingYear),
+				photo: fileLink?.url || fileLinkExist,
+				photo_public_id: fileLink?.public_id || fileLinkExistId,
+				department,
+				residentialAddress,
+				professionalAddress,
+			},
+		});
+
+		res.status(200).json({
+			message: "User updated successfully",
+			data: updateMember,
 			error: false,
 			success: true,
 		});
