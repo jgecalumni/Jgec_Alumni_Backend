@@ -326,7 +326,6 @@ export const updateMemeber = asyncHandler(
 			residentialAddress,
 			professionalAddress,
 		} = req.body;
-		console.log(req.body);
 		
 		
 		const photo = (req as any).file;
