@@ -27,12 +27,7 @@ router.route("/").get(authentication, allMembers);
 router.route("/profile/:id").get(authentication, memberDetails);
 router.route("/update/:id").patch(
 	authentication,
-	upload.fields([
-		{
-			name: "photo",
-			maxCount: 1,
-		},
-	]),
+	upload.single("photo"),
 	updateMemeber
 );
 

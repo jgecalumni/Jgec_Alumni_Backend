@@ -326,9 +326,7 @@ export const updateMemeber = asyncHandler(
 			residentialAddress,
 			professionalAddress,
 		} = req.body;
-		
-		
-		const photo = (req as any).file;
+		const photo = (req as any).file;		
 		const { id } = req.params;
 
 		if (
