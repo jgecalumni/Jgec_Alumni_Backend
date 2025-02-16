@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import prisma from "../prisma";
 import { asyncHandler } from "../utils/asyncHandler";
+import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary";
 
 // all scholarships controller functions - create, update, delete and get all scholarships
 export const getAllScholarships = asyncHandler(
@@ -21,15 +22,10 @@ export const getAllScholarships = asyncHandler(
 				id: true,
 				name: true,
 				subtitle: true,
-				providerId: true,
-				provider: {
-					select: {
-						name: true,
-						photo: true,
-						passingYear: true,
-						department: true,
-					},
-				},
+				providerName: true,
+				providerDepartment: true,
+				providerPassingYear: true,
+				providerImage: true,
 				providerDescription: true,
 				description: true,
 				whoCanApply: true,
@@ -77,15 +73,10 @@ export const getScholarshipById = asyncHandler(
 				id: true,
 				name: true,
 				subtitle: true,
-				providerId: true,
-				provider: {
-					select: {
-						name: true,
-						photo: true,
-						passingYear: true,
-						department: true,
-					},
-				},
+				providerName: true,
+				providerDepartment: true,
+				providerPassingYear: true,
+				providerImage: true,
 				providerDescription: true,
 				description: true,
 				whoCanApply: true,
@@ -131,7 +122,9 @@ export const addNewScholarship = asyncHandler(
 		const {
 			name,
 			subtitle,
-			providerId,
+			providerName,
+			providerDepartment,
+			providerPassingYear,
 			providerDescription,
 			description,
 			whoCanApply,
@@ -140,11 +133,15 @@ export const addNewScholarship = asyncHandler(
 			amountDetails,
 			semRequire,
 		} = req.body;
-
+		
+		const providerImage = (req as any).file;
 		if (
 			!(
 				name &&
 				subtitle &&
+				providerName &&
+				providerDepartment &&
+				providerPassingYear &&
 				providerDescription &&
 				description &&
 				whoCanApply &&
@@ -177,12 +174,18 @@ export const addNewScholarship = asyncHandler(
 			return;
 		}
 
+		const fileLink = await uploadOnCloudinary(providerImage.path);
+
 		// Create new scholarship
 		const newScholarship = await prisma.scholarships.create({
 			data: {
 				name,
 				subtitle,
-				providerId: parseInt(providerId),
+				providerName,
+				providerDepartment,
+				providerPassingYear:parseInt(providerPassingYear),
+				providerImage: fileLink?.url || "",
+				providerImage_public_id: fileLink?.public_id || "",
 				providerDescription,
 				description,
 				whoCanApply,
@@ -195,15 +198,11 @@ export const addNewScholarship = asyncHandler(
 				id: true,
 				name: true,
 				subtitle: true,
-				providerId: true,
-				provider: {
-					select: {
-						name: true,
-						photo: true,
-						passingYear: true,
-						department: true,
-					},
-				},
+				providerName: true,
+				providerDepartment: true,
+				providerPassingYear: true,
+				providerImage: true,
+				providerImage_public_id: true,
 				providerDescription: true,
 				description: true,
 				whoCanApply: true,
@@ -227,8 +226,10 @@ export const updateScholarship = asyncHandler(
 	async (req: Request, res: Response) => {
 		const {
 			name,
-            subtitle,
-			providerId,
+			subtitle,
+			providerName,
+			providerDepartment,
+			providerPassingYear,
 			providerDescription,
 			description,
 			whoCanApply,
@@ -237,14 +238,18 @@ export const updateScholarship = asyncHandler(
 			amountDetails,
 			semRequire,
 		} = req.body;
+		const providerImage = (req as any).file;
 		const { id } = req.params;
 
 		//  Check if all required fields are provided
 		if (
 			!(
 				name &&
-                subtitle&&
+				subtitle &&
+				providerName &&
 				providerDescription &&
+				providerDepartment &&
+				providerPassingYear &&
 				description &&
 				whoCanApply &&
 				whenToApply &&
@@ -273,14 +278,28 @@ export const updateScholarship = asyncHandler(
 			});
 			return;
 		}
+		let fileLinkExist = isExist.providerImage || "";
+		let fileLinkExistId = isExist.providerImage_public_id || "";
+		let fileLink = null;
+
+		if (providerImage) {
+			if (isExist.providerImage_public_id) {
+				await deleteFromCloudinary(isExist.providerImage_public_id);
+			}
+			fileLink = await uploadOnCloudinary(providerImage.path);
+		}
 
 		// Update scholarship
 		const updatedScholarship = await prisma.scholarships.update({
 			where: { id: parseInt(id) },
 			data: {
 				name,
-                subtitle,
-				providerId: parseInt(providerId),
+				subtitle,
+				providerName,
+				providerDepartment,
+				providerPassingYear: parseInt(providerPassingYear),
+				providerImage: fileLink?.url || fileLinkExist,
+				providerImage_public_id: fileLink?.public_id || fileLinkExistId,
 				providerDescription,
 				description,
 				whoCanApply,
@@ -292,16 +311,12 @@ export const updateScholarship = asyncHandler(
 			select: {
 				id: true,
 				name: true,
-                subtitle:true,
-				providerId: true,
-				provider: {
-					select: {
-						name: true,
-						photo: true,
-						passingYear: true,
-						department: true,
-					},
-				},
+				subtitle: true,
+				providerName: true,
+				providerDepartment: true,
+				providerPassingYear: true,
+				providerImage: true,
+				providerImage_public_id: true,
 				providerDescription: true,
 				description: true,
 				whoCanApply: true,
@@ -341,6 +356,9 @@ export const deleteScholarship = asyncHandler(
 
 		// Delete scholarship
 		await prisma.scholarships.delete({ where: { id: Number(id) } });
+		const deleteThumbnail = await deleteFromCloudinary(
+			isExist.providerImage_public_id || ""
+		);
 
 		res.status(200).json({
 			message: "Scholarship deleted successfully",
@@ -393,14 +411,9 @@ export const getAllScholarshipApplications = asyncHandler(
 						id: true,
 						name: true,
 						description: true,
-						provider: {
-							select: {
-								name: true,
-								photo: true,
-								passingYear: true,
-								department: true,
-							},
-						},
+						providerName: true,
+						providerImage: true,
+						providerDescription: true,
 					},
 				},
 			},
@@ -450,14 +463,9 @@ export const applicantDetails = asyncHandler(
 						id: true,
 						name: true,
 						description: true,
-						provider: {
-							select: {
-								name: true,
-								photo: true,
-								passingYear: true,
-								department: true,
-							},
-						},
+						providerName: true,
+						providerImage: true,
+						providerDescription: true,
 					},
 				},
 			},
@@ -605,14 +613,9 @@ export const applyForScholarship = asyncHandler(
 							id: true,
 							name: true,
 							description: true,
-							provider: {
-								select: {
-									name: true,
-									photo: true,
-									passingYear: true,
-									department: true,
-								},
-							},
+							providerName: true,
+							providerImage: true,
+							providerDescription: true,
 						},
 					},
 				},

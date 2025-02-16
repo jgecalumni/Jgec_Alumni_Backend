@@ -14,11 +14,11 @@ datasource db {
 }
 
 model members {
-  id                  Int            @id @default(autoincrement())
+  id                  Int      @id @default(autoincrement())
   name                String
-  email               String         @unique
+  email               String   @unique
   password            String
-  studentId           String         @unique
+  studentId           String   @unique
   passingYear         Int
   department          String
   residentialAddress  String
@@ -27,27 +27,29 @@ model members {
   photo_public_id     String
   receipt             String
   receipt_public_id   String
-  createdAt           DateTime       @default(now())
-  updatedAt           DateTime       @default(now())
-  Scholarships        Scholarships[]
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @default(now())
 }
 
 model Scholarships {
-  id                    Int                      @id @default(autoincrement())
-  name                  String                   @db.VarChar(200)
-  subtitle              String                   @default("") @db.VarChar(200)
-  providerId            Int
-  provider              members                  @relation(fields: [providerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  providerDescription   String                   @db.Text
-  description           String                   @db.Text
-  whoCanApply           String                   @db.VarChar(500)
-  whenToApply           String                   @db.VarChar(500)
-  ageLimit              String                   @db.VarChar(500)
-  amountDetails         String                   @db.VarChar(500)
-  semRequire            String                   @default("1st Sem") @db.VarChar(500)
-  createdAt             DateTime                 @default(now())
-  updatedAt             DateTime                 @default(now())
-  scholarshipApplicants ScholarshipApplication[]
+  id                      Int                      @id @default(autoincrement())
+  name                    String                   @db.VarChar(200)
+  subtitle                String                   @default("") @db.VarChar(200)
+  providerName            String                   @db.VarChar(200)
+  providerImage           String                   @db.VarChar(200)
+  providerImage_public_id String                   @db.VarChar(200)
+  providerDepartment      String                   @db.VarChar(200)
+  providerPassingYear     Int                      @default(0)
+  providerDescription     String                   @db.Text
+  description             String                   @db.Text
+  whoCanApply             String                   @db.VarChar(500)
+  whenToApply             String                   @db.VarChar(500)
+  ageLimit                String                   @db.VarChar(500)
+  amountDetails           String                   @db.VarChar(500)
+  semRequire              String                   @default("1st Sem") @db.VarChar(500)
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @default(now())
+  scholarshipApplicants   ScholarshipApplication[]
 }
 
 model ScholarshipApplication {
