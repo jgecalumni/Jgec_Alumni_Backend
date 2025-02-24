@@ -65,7 +65,7 @@ export const adminLogin = asyncHandler(async (req: Request, res: Response) => {
 		httpOnly: true,
 		secure: true, // Set only if using HTTPS
 		sameSite: "none", // Cross-site cookie setting
-		domain: "https://admin.jgecalumni.in", // Set a domain if required
+		domain: "admin.jgecalumni.in", // Set a domain if required
 	});
 
 	response.status(200).json({
