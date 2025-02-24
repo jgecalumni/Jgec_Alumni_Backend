@@ -61,14 +61,12 @@ export const adminLogin = asyncHandler(async (req: Request, res: Response) => {
 		expiresIn: "1D",
 	});
 
-	const response = res.cookie(
-		"token",
-		accessToken,
-		{
-		    secure: true,
-		    sameSite: 'none',
-		}
-	);
+	const response = res.cookie("token", accessToken, {
+		httpOnly: true,
+		secure: true, // Set only if using HTTPS
+		sameSite: "none", // Cross-site cookie setting
+		domain: "https://admin.jgecalumni.in", // Set a domain if required
+	});
 
 	response.status(200).json({
 		message: "Login successful",
@@ -325,7 +323,7 @@ export const updateMemeber = asyncHandler(
 			residentialAddress,
 			professionalAddress,
 		} = req.body;
-		const photo = (req as any).file;		
+		const photo = (req as any).file;
 		const { id } = req.params;
 
 		if (
@@ -376,10 +374,10 @@ export const updateMemeber = asyncHandler(
 			fileLink = await uploadOnCloudinary(photo.path);
 		}
 
-		let updatedPassword = isExist.password; 
+		let updatedPassword = isExist.password;
 
 		if (password) {
-			updatedPassword = await bcrypt.hash(password,10);
+			updatedPassword = await bcrypt.hash(password, 10);
 		}
 
 		const updateMember = await prisma.members.update({
