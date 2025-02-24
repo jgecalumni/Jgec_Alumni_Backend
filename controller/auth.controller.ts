@@ -169,7 +169,7 @@ export const registerMember = asyncHandler(
 
 		const response = res.cookie("token", accessToken, {
 			httpOnly: true,
-			// secure: true,
+			secure: true,
 			sameSite: "none",
 		});
 
@@ -230,9 +230,9 @@ export const loginMember = asyncHandler(async (req: Request, res: Response) => {
 	);
 
 	const response = res.cookie("token", accessToken, {
-		// httpOnly: true,
-		// secure: true,
-		// sameSite: "none",
+		httpOnly: true,
+		secure: true,
+		sameSite: "none",
 	});
 
 	response.status(200).json({
