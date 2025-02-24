@@ -33,7 +33,7 @@ app.use(
 
 // declare routes
 app.get("/", (req, res) => {
-	res.send("Hello World updated!");
+	res.send("Hello World!");
 });
 
 // routes
