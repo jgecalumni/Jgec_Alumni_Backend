@@ -66,7 +66,7 @@ export const adminLogin = asyncHandler(async (req: Request, res: Response) => {
 		accessToken,
 		{
 		    httpOnly: true,
-		    secure: false,
+		    secure: true,
 		    sameSite: 'none',
 		}
 	);
