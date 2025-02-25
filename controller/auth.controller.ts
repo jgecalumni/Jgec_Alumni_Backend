@@ -62,7 +62,7 @@ export const adminLogin = asyncHandler(async (req: Request, res: Response) => {
 			expiresIn: "1D",
 		});
 
-		const response = res.cookie("token", accessToken, {
+		const response = res.cookie("tokenAdmin", accessToken, {
 			httpOnly: true,
 			secure: true, 
 			sameSite: "none",
