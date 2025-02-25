@@ -258,6 +258,19 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
 		success: true,
 	});
 });
+export const adminlogout = asyncHandler(async (req: Request, res: Response) => {
+	res.clearCookie("tokenAdmin",{
+		httpOnly: true,
+		secure: true, 
+		sameSite: "none",
+		domain: ".jgecalumni.in",
+	});
+	res.status(200).json({
+		message: "Logout successful",
+		error: false,
+		success: true,
+	});
+});
 
 export const allMembers = asyncHandler(async (req: Request, res: Response) => {
 	const { limit, page, search } = req.query;
