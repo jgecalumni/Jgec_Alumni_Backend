@@ -12,7 +12,7 @@ const authentication = async (req: Request, res: Response, next: NextFunction) =
         });
         return;
     }
-    const token = authHeader.split('token=')[1];
+    const token = authHeader.split('token=')[1] || authHeader.split('tokenAdmin=')[1];
     // console.log(token);
     jwt.verify(token, process.env.JWT_SECRET as string, (err, data) => {
         if (err) {
