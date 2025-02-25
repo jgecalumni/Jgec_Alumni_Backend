@@ -22,7 +22,7 @@ router.route("/register").post(
 );
 router.route("/admin/login").post(adminLogin);
 router.route("/login").post(loginMember);
-router.route("/logout").get(authentication,logout);
+router.route("/logout").get(logout);
 router.route("/").get(authentication, allMembers);
 router.route("/profile/:id").get(authentication, memberDetails);
 router.route("/update/:id").patch(
