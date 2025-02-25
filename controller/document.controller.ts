@@ -42,7 +42,7 @@ export const addScholarshipDocs = asyncHandler(
 		const response = await prisma.scholarshipDocuments.create({
 			data: {
 				title,
-				link: fileLink?.url || "",
+				link: fileLink?.secure_url || "",
 				link_public_id: fileLink?.public_id || "",
 			},
 		});
@@ -112,69 +112,70 @@ export const deleteScholarshipDocs = asyncHandler(
 	}
 );
 
-export const updateScholarshipDocs = asyncHandler(async (req: Request, res: Response) => {
-	const { title } = req.body;
+export const updateScholarshipDocs = asyncHandler(
+	async (req: Request, res: Response) => {
+		const { title } = req.body;
 
-	const file = (req as any).file;
+		const file = (req as any).file;
 
-	const { id } = req.params;
+		const { id } = req.params;
 
-	if (!title) {
-		res.status(400).json({
-			success: false,
-			message: "Please provide all required fields",
-			error: true,
-		});
-		return;
-	}
-
-	const isExist = await prisma.scholarshipDocuments.findFirst({ where: { id: parseInt(id) } });
-	if (!isExist) {
-		res
-			.status(404)
-			.json({ success: false, message: "Event not found", error: true });
-		return;
-	}
-
-	if (file && file.size > 2 * 1024 * 1024) {
-		res.status(400).json({
-			success: false,
-			message: "File size must be less than 2MB",
-			error: true,
-		});
-		return;
-	}
-	let fileLinkExist = "",
-		fileLinkExistId = null;
-	if (!file) {
-		fileLinkExist = isExist.link || "";
-		fileLinkExistId = isExist.link_public_id;
-	}
-
-	let fileLink = null;
-	if (file) {
-		if (isExist.link_public_id) {
-			await deleteFromCloudinary(isExist.link_public_id);
+		if (!title) {
+			res.status(400).json({
+				success: false,
+				message: "Please provide all required fields",
+				error: true,
+			});
+			return;
 		}
-		fileLink = await uploadOnCloudinary(file.path);
+
+		const isExist = await prisma.scholarshipDocuments.findFirst({
+			where: { id: parseInt(id) },
+		});
+		if (!isExist) {
+			res
+				.status(404)
+				.json({ success: false, message: "Event not found", error: true });
+			return;
+		}
+
+		if (file && file.size > 2 * 1024 * 1024) {
+			res.status(400).json({
+				success: false,
+				message: "File size must be less than 2MB",
+				error: true,
+			});
+			return;
+		}
+		let fileLinkExist = "",
+			fileLinkExistId = null;
+		if (!file) {
+			fileLinkExist = isExist.link || "";
+			fileLinkExistId = isExist.link_public_id;
+		}
+
+		let fileLink = null;
+		if (file) {
+			if (isExist.link_public_id) {
+				await deleteFromCloudinary(isExist.link_public_id);
+			}
+			fileLink = await uploadOnCloudinary(file.path);
+		}
+
+		const updateData = await prisma.scholarshipDocuments.update({
+			where: { id: parseInt(id) },
+			data: {
+				title,
+				link: fileLink?.secure_url || fileLinkExist,
+				link_public_id: fileLink?.public_id || fileLinkExistId,
+			},
+		});
+
+		res.status(201).json({
+			message: "Document updated successfully",
+			data: updateData,
+			error: false,
+			success: true,
+		});
 	}
-
-	const updateData = await prisma.scholarshipDocuments.update({
-		where: { id: parseInt(id) },
-		data: {
-			title,
-			link: fileLink?.url || fileLinkExist,
-			link_public_id: fileLink?.public_id || fileLinkExistId,
-			
-		},
-	});
-
-	
-	
-	res.status(201).json({
-		message: "Document updated successfully",
-		data: updateData,
-		error: false,
-		success: true,
-	});
-});
+);
