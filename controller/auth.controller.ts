@@ -259,6 +259,7 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
 	});
 });
 export const adminlogout = asyncHandler(async (req: Request, res: Response) => {
+	
 	res.clearCookie("tokenAdmin",{
 		httpOnly: true,
 		secure: true, 

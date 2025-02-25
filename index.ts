@@ -12,6 +12,7 @@ import AuthRoute from "./router/auth.route";
 import ScholarshipRoute from "./router/scholarship.route";
 import NoticeRoute from "./router/notice.route";
 import EventRoute from "./router/event.route";
+import DocRoute from "./router/document.route";
 import { allCounts } from "./controller/count.controller";
 import authentication from "./middleware/authentication";
 
@@ -24,7 +25,7 @@ app.use(
 		origin: [
 			process.env.FORNTEND_URI_DEV as string,
 			process.env.FORNTEND_URI_PROD as string,
-			process.env.FORNTEND_URI_MAIN as string
+			process.env.FORNTEND_URI_MAIN as string,
 		],
 		methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
 		credentials: true,
@@ -41,6 +42,7 @@ app.use("/v1/api/auth/member", AuthRoute);
 app.use("/v1/api/scholarships", ScholarshipRoute);
 app.use("/v1/api/notice", NoticeRoute);
 app.use("/v1/api/events", EventRoute);
+app.use("/v1/api/documents", DocRoute);
 app.use("/v1/api/all-count", authentication, allCounts);
 
 app.listen(port, () => console.log("🚀[Server]: listening on port " + port));

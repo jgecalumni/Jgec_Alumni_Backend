@@ -117,3 +117,10 @@ model EventSchedule {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 }
+
+model ScholarshipDocuments {
+  id             Int     @id @default(autoincrement())
+  title          String
+  link           String?
+  link_public_id String?
+}
