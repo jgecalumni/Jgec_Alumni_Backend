@@ -64,9 +64,9 @@ export const adminLogin = asyncHandler(async (req: Request, res: Response) => {
 
 		const response = res.cookie("token", accessToken, {
 			httpOnly: true,
-			secure: true, // Set only if using HTTPS
-			sameSite: "none", // Cross-site cookie setting
-			domain: "jgecalumni.in", // Set a domain if required
+			secure: true, 
+			sameSite: "none",
+			domain: "jgecalumni.in",
 		});
 
 		response.status(200).json({
@@ -168,8 +168,9 @@ export const registerMember = asyncHandler(
 
 		const response = res.cookie("token", accessToken, {
 			httpOnly: true,
-			secure: true,
+			secure: true, 
 			sameSite: "none",
+			domain: "jgecalumni.in",
 		});
 
 		response.status(201).json({
@@ -230,8 +231,9 @@ export const loginMember = asyncHandler(async (req: Request, res: Response) => {
 
 	const response = res.cookie("token", accessToken, {
 		httpOnly: true,
-		secure: true,
+		secure: true, 
 		sameSite: "none",
+		domain: "jgecalumni.in",
 	});
 
 	response.status(200).json({
@@ -244,7 +246,12 @@ export const loginMember = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const logout = asyncHandler(async (req: Request, res: Response) => {
-	res.clearCookie("token");
+	res.clearCookie("token",{
+		httpOnly: true,
+		secure: true, 
+		sameSite: "none",
+		domain: "jgecalumni.in",
+	});
 	res.status(200).json({
 		message: "Logout successful",
 		error: false,
