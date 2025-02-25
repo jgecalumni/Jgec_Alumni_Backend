@@ -233,7 +233,7 @@ export const loginMember = asyncHandler(async (req: Request, res: Response) => {
 		httpOnly: true,
 		secure: true, 
 		sameSite: "none",
-		domain: ".jgecalumni.in",
+		domain: "jgecalumni.in",
 	});
 
 	response.status(200).json({
