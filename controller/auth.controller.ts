@@ -170,7 +170,7 @@ export const registerMember = asyncHandler(
 			httpOnly: true,
 			secure: true, 
 			sameSite: "none",
-			domain: "jgecalumni.in",
+			domain: ".jgecalumni.in",
 		});
 
 		response.status(201).json({
@@ -233,7 +233,7 @@ export const loginMember = asyncHandler(async (req: Request, res: Response) => {
 		httpOnly: true,
 		secure: true, 
 		sameSite: "none",
-		domain: "jgecalumni.in",
+		domain: ".jgecalumni.in",
 	});
 
 	response.status(200).json({
@@ -250,7 +250,7 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
 		httpOnly: true,
 		secure: true, 
 		sameSite: "none",
-		domain: "jgecalumni.in",
+		domain: ".jgecalumni.in",
 	});
 	res.status(200).json({
 		message: "Logout successful",
