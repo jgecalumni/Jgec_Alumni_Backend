@@ -26,54 +26,56 @@ interface IResponse extends Response {
 }
 
 export const adminLogin = asyncHandler(async (req: Request, res: Response) => {
-	const { email, password } = req.body;
-	if (!(email && password)) {
-		res.status(400).json({
-			message: "Email and password are required",
-			error: true,
-			success: false,
+	
+		const { email, password } = req.body;
+		if (!(email && password)) {
+			res.status(400).json({
+				message: "Email and password are required",
+				error: true,
+				success: false,
+			});
+			return;
+		}
+
+		const checkEmail = email === process.env.ADMIN_EMAIL;
+		const checkPassword = password === process.env.ADMIN_PASSWORD;
+
+		if (!checkEmail) {
+			res.status(401).json({
+				message: "Admin not exists",
+				error: true,
+				success: false,
+			});
+			return;
+		}
+		if (!checkPassword) {
+			res.status(401).json({
+				message: "Invalid credentials",
+				error: true,
+				success: false,
+			});
+			return;
+		}
+
+		// generate token & cookies
+		const accessToken = jwt.sign({ email }, process.env.JWT_SECRET as string, {
+			expiresIn: "1D",
 		});
-		return;
-	}
 
-	const checkEmail = email === process.env.ADMIN_EMAIL;
-	const checkPassword = password === process.env.ADMIN_PASSWORD;
-
-	if (!checkEmail) {
-		res.status(401).json({
-			message: "Admin not exists",
-			error: true,
-			success: false,
+		const response = res.cookie("token", accessToken, {
+			httpOnly: true,
+			secure: true, // Set only if using HTTPS
+			sameSite: "none", // Cross-site cookie setting
+			domain: ".jgecalumni.in", // Set a domain if required
 		});
-		return;
-	}
-	if (!checkPassword) {
-		res.status(401).json({
-			message: "Invalid credentials",
-			error: true,
-			success: false,
+
+		response.status(200).json({
+			message: "Login successful",
+			accessToken,
+			error: false,
+			success: true,
 		});
-		return;
-	}
-
-	// generate token & cookies
-	const accessToken = jwt.sign({ email }, process.env.JWT_SECRET as string, {
-		expiresIn: "1D",
-	});
-
-	const response = res.cookie("token", accessToken, {
-		httpOnly: true,
-		secure: true, // Set only if using HTTPS
-		sameSite: "none", // Cross-site cookie setting
-		domain: "admin.jgecalumni.in", // Set a domain if required
-	});
-
-	response.status(200).json({
-		message: "Login successful",
-		accessToken,
-		error: false,
-		success: true,
-	});
+	
 });
 
 export const registerMember = asyncHandler(
