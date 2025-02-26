@@ -4,7 +4,7 @@ import { asyncHandler } from "../utils/asyncHandler";
 import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary";
 
 // all scholarships controller functions - create, update, delete and get all scholarships
-export const getAllScholarships = asyncHandler(
+export const getAllScholarshipsAdmin = asyncHandler(
 	async (req: Request, res: Response) => {
 		const { limit, page, search } = req.query;
 
@@ -12,6 +12,59 @@ export const getAllScholarships = asyncHandler(
 		const scholarships = await prisma.scholarships.findMany({
 			take: Number(limit) || 10,
 			skip: (Number(page) - 1) * Number(limit) || 0,
+			// search name if search keyword exist
+			where: {
+				name: {
+					contains: (search as string) || "",
+				},
+			},
+			select: {
+				id: true,
+				name: true,
+				subtitle: true,
+				providerName: true,
+				providerDepartment: true,
+				providerPassingYear: true,
+				providerImage: true,
+				providerDescription: true,
+				description: true,
+				whoCanApply: true,
+				whenToApply: true,
+				ageLimit: true,
+				amountDetails: true,
+				semRequire: true,
+				scholarshipApplicants: {
+					select: {
+						id: true,
+						name: true,
+						email: true,
+						mobile: true,
+						department: true,
+						hsPercentage: true,
+						btechResults: true,
+					},
+				},
+			},
+		});
+
+		res.status(200).json({
+			message: "Scholarships fetched successfully",
+			scholarships,
+			error: false,
+			success: true,
+			docCount: count,
+			totalPages: Math.ceil(count / (Number(limit) || 10)),
+			page: Number(page) || 1,
+			limit: Number(limit) || 10,
+		});
+	}
+);
+export const getAllScholarships = asyncHandler(
+	async (req: Request, res: Response) => {
+		const { search,limit,page } = req.query;
+
+		const count = await prisma.scholarships.count();
+		const scholarships = await prisma.scholarships.findMany({
 			// search name if search keyword exist
 			where: {
 				name: {

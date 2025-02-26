@@ -7,6 +7,7 @@ import {
 	deleteScholarship,
 	getAllScholarshipApplications,
 	getAllScholarships,
+	getAllScholarshipsAdmin,
 	getScholarshipById,
 	updateScholarship,
 } from "../controller/scholarships.controller";
@@ -16,6 +17,7 @@ import { upload } from "../middleware/photo-upload";
 const router = express.Router();
 
 // Routes for scholarships
+router.route("/admin").get(getAllScholarshipsAdmin);
 router.route("/").get(getAllScholarships);
 router.route("/:id").get(getScholarshipById);
 router
