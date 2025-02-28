@@ -35,3 +35,14 @@ export const deleteFromCloudinary = async (publicId: string) => {
           return error
      }
 }
+
+export const uploadMultipleOnCloudinary = async (files: Express.Multer.File[]) => {
+     try {
+       const uploadPromises = files.map((file) => uploadOnCloudinary(file.path));
+       const results = await Promise.all(uploadPromises);
+       return results.filter((result) => result !== null);
+     } catch (error) {
+       console.error("Cloudinary Multiple Upload Error:", error);
+       return [];
+     }
+   };
