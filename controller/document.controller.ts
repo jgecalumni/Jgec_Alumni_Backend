@@ -540,14 +540,14 @@ export const addauditReportDocs = asyncHandler(
 			});
 			return;
 		}
-		if (file && file.size > 2 * 1024 * 1024) {
-			res.status(400).json({
-				success: false,
-				message: "File size must be less than 2MB",
-				error: true,
-			});
-			return;
-		}
+		// if (file && file.size > 2 * 1024 * 1024) {
+		// 	res.status(400).json({
+		// 		success: false,
+		// 		message: "File size must be less than 2MB",
+		// 		error: true,
+		// 	});
+		// 	return;
+		// }
 		const isExists = await prisma.auditReport.findFirst({
 			where: { title },
 		});

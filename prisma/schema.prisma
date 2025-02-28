@@ -156,6 +156,6 @@ model GalleryImages {
   id                Int             @id @default(autoincrement())
   galleryCategoryId Int
   category          GalleryCategory @relation(fields: [galleryCategoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  image             String
-  image_public_id   String
+  image             String?
+  image_public_id   String?
 }
