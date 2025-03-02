@@ -8,6 +8,7 @@ import {
 	deleteGalleryImage,
 	getAllCategory,
 	getAllGalleryImage,
+	getCategoryById,
 	getImagesById,
 	upadateCategory,
 	upadateGalleryImage,
@@ -20,6 +21,7 @@ router.route("/add-category").post(createCategory);
 router.route("/all-category").get(getAllCategory);
 router.route("/delete-category/:id").delete(deleteCategory);
 router.route("/update-category/:id").patch(upadateCategory);
+router.route("/get-category/:id").get(getCategoryById);
 
 //gallery image route
 router

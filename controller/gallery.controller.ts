@@ -166,6 +166,39 @@ export const deleteCategory = asyncHandler(
 	}
 );
 
+export const getCategoryById = asyncHandler(
+	async (req: Request, res: Response) => {
+		const { id } = req.params;
+		const category = await prisma.galleryCategory.findUnique({
+			where: { id: parseInt(id) },
+			include: {
+				images: {
+					select: {
+						id: true,
+						image: true,
+					},
+				},
+			},
+		});
+		if (!category) {
+			res.status(404).json({
+				success: false,
+				data: [],
+				message: "No images found",
+				error: true,
+			});
+			return;
+		} else {
+			res.status(200).json({
+				success: true,
+				data: category,
+				message: "Images fetched successfully",
+				error: false,
+			});
+		}
+	}
+);
+
 // gallery images
 
 export const createGalleryImage = asyncHandler(
@@ -343,6 +376,11 @@ export const getImagesById = asyncHandler(
 		const images = await prisma.galleryImages.findMany({
 			where: {
 				galleryCategoryId: parseInt(id),
+			},
+			select: {
+				id: true,
+				image: true,
+				galleryCategoryId: true,
 			},
 		});
 		if (!images) {
