@@ -225,7 +225,7 @@ export const createGalleryImage = asyncHandler(
 		res.status(201).json({
 			success: true,
 			data: galleryImages,
-			message: "Gallery images uploaded successfully",
+			message: "Images uploaded successfully",
 			error: false,
 		});
 	}
