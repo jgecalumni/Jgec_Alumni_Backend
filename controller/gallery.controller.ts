@@ -6,6 +6,7 @@ import {
 	uploadMultipleOnCloudinary,
 	uploadOnCloudinary,
 } from "../utils/cloudinary";
+import { error } from "console";
 
 //gallery category
 
@@ -22,7 +23,11 @@ export const createCategory = asyncHandler(
 			},
 		});
 		if (isExist) {
-			res.status(400).json({ error: "Category already exists" });
+			res.status(400).json({
+				success: false,
+				message: "Category already exists",
+				error: true,
+			});
 			return;
 		}
 		const category = await prisma.galleryCategory.create({
@@ -42,7 +47,10 @@ export const createCategory = asyncHandler(
 export const upadateCategory = asyncHandler(
 	async (req: Request, res: Response) => {
 		const { id } = req.params;
+
 		const { name } = req.body;
+		console.log(name);
+
 		if (!name) {
 			res.status(400).json({ error: "Name is required" });
 			return;
@@ -85,7 +93,16 @@ export const upadateCategory = asyncHandler(
 
 export const getAllCategory = asyncHandler(
 	async (req: Request, res: Response) => {
+		const { limit, page, search } = req.query;
+		const count = await prisma.galleryCategory.count();
 		const category = await prisma.galleryCategory.findMany({
+			take: Number(limit) || 10,
+			skip: (Number(page) - 1) * Number(limit) || 0,
+			where: {
+				name: {
+					contains: search as string,
+				},
+			},
 			select: {
 				id: true,
 				name: true,
@@ -102,6 +119,9 @@ export const getAllCategory = asyncHandler(
 			data: category,
 			message: "Categories fetched successfully",
 			error: false,
+			totalPages: Math.ceil(count / (Number(limit) || 10)),
+			page: Number(page) || 1,
+			limit: Number(limit) || 10,
 		});
 	}
 );
@@ -151,7 +171,6 @@ export const deleteCategory = asyncHandler(
 export const createGalleryImage = asyncHandler(
 	async (req: Request, res: Response) => {
 		const files = (req as any).files;
-
 		if (!files || files.length === 0) {
 			res.status(400).json({
 				success: false,
@@ -224,6 +243,9 @@ export const deleteGalleryImage = asyncHandler(
 			res.status(400).json({ error: "Image do not exists" });
 			return;
 		}
+		const deleteImage = await deleteFromCloudinary(
+			isExist.image_public_id || ""
+		);
 		const category = await prisma.galleryImages.delete({
 			where: {
 				id: parseInt(id),
@@ -311,6 +333,32 @@ export const upadateGalleryImage = asyncHandler(
 			data: updateData,
 			error: false,
 			success: true,
+		});
+	}
+);
+
+export const getImagesById = asyncHandler(
+	async (req: Request, res: Response) => {
+		const id = req.params.id;
+		const images = await prisma.galleryImages.findMany({
+			where: {
+				galleryCategoryId: parseInt(id),
+			},
+		});
+		if (!images) {
+			res.status(404).json({
+				success: false,
+				data: [],
+				message: "No images found",
+				error: true,
+			});
+			return;
+		}
+		res.status(200).json({
+			success: true,
+			data: images,
+			message: "Images fetched successfully",
+			error: false,
 		});
 	}
 );
