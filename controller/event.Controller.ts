@@ -38,10 +38,10 @@ export const addNewEvent = asyncHandler(async (req: Request, res: Response) => {
 		return;
 	}
 
-	if (event_thumbnail && event_thumbnail.size > 2 * 1024 * 1024) {
+	if (event_thumbnail && event_thumbnail.size > 10 * 1024 * 1024) {
 		res.status(400).json({
 			success: false,
-			message: "File size must be less than 2MB",
+			message: "File size must be less than 10MB",
 			error: true,
 		});
 		return;
@@ -202,10 +202,10 @@ export const updateEvent = asyncHandler(async (req: Request, res: Response) => {
 		return;
 	}
 
-	if (event_thumbnail && event_thumbnail.size > 2 * 1024 * 1024) {
+	if (event_thumbnail && event_thumbnail.size > 10 * 1024 * 1024) {
 		res.status(400).json({
 			success: false,
-			message: "File size must be less than 2MB",
+			message: "File size must be less than 10MB",
 			error: true,
 		});
 		return;

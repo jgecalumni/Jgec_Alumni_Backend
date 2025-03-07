@@ -15,10 +15,10 @@ export const addScholarshipDocs = asyncHandler(
 			});
 			return;
 		}
-		if (file && file.size > 2 * 1024 * 1024) {
+		if (file && file.size > 10* 1024 * 1024) {
 			res.status(400).json({
 				success: false,
-				message: "File size must be less than 2MB",
+				message: "File size must be less than 10MB",
 				error: true,
 			});
 			return;
@@ -137,10 +137,10 @@ export const updateScholarshipDocs = asyncHandler(
 			return;
 		}
 
-		if (file && file.size > 2 * 1024 * 1024) {
+		if (file && file.size > 10* 1024 * 1024) {
 			res.status(400).json({
 				success: false,
-				message: "File size must be less than 2MB",
+				message: "File size must be less than 10MB",
 				error: true,
 			});
 			return;
@@ -190,10 +190,10 @@ export const addKanchenjungaDocs = asyncHandler(
 			});
 			return;
 		}
-		if (file && file.size > 2 * 1024 * 1024) {
+		if (file && file.size > 10* 1024 * 1024) {
 			res.status(400).json({
 				success: false,
-				message: "File size must be less than 2MB",
+				message: "File size must be less than 10MB",
 				error: true,
 			});
 			return;
@@ -312,10 +312,10 @@ export const updateKanchenjungaDocs = asyncHandler(
 			return;
 		}
 
-		if (file && file.size > 2 * 1024 * 1024) {
+		if (file && file.size > 10* 1024 * 1024) {
 			res.status(400).json({
 				success: false,
-				message: "File size must be less than 2MB",
+				message: "File size must be less than 10MB",
 				error: true,
 			});
 			return;
@@ -365,10 +365,10 @@ export const addGivingBackDocs = asyncHandler(
 			});
 			return;
 		}
-		if (file && file.size > 2 * 1024 * 1024) {
+		if (file && file.size > 10* 1024 * 1024) {
 			res.status(400).json({
 				success: false,
-				message: "File size must be less than 2MB",
+				message: "File size must be less than 10MB",
 				error: true,
 			});
 			return;
@@ -487,10 +487,10 @@ export const updateGivingBackDocs = asyncHandler(
 			return;
 		}
 
-		if (file && file.size > 2 * 1024 * 1024) {
+		if (file && file.size > 10* 1024 * 1024) {
 			res.status(400).json({
 				success: false,
-				message: "File size must be less than 2MB",
+				message: "File size must be less than 10MB",
 				error: true,
 			});
 			return;
@@ -540,10 +540,10 @@ export const addauditReportDocs = asyncHandler(
 			});
 			return;
 		}
-		if (file && file.size > 2 * 1024 * 1024) {
+		if (file && file.size > 10* 1024 * 1024) {
 			res.status(400).json({
 				success: false,
-				message: "File size must be less than 2MB",
+				message: "File size must be less than 10MB",
 				error: true,
 			});
 			return;
@@ -662,10 +662,10 @@ export const updateauditReportDocs = asyncHandler(
 			return;
 		}
 
-		if (file && file.size > 2 * 1024 * 1024) {
+		if (file && file.size > 10* 1024 * 1024) {
 			res.status(400).json({
 				success: false,
-				message: "File size must be less than 2MB",
+				message: "File size must be less than 10MB",
 				error: true,
 			});
 			return;

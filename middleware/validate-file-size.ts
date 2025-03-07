@@ -17,7 +17,7 @@ interface IResponse {
 
 export const validateFile = (req: IResponse, res: Response, next: NextFunction): void => {
     const allowedTypes = ["image/jpeg", "image/png", "image/jpg", "image/webp"];
-    const maxSize = 2 * 1024 * 1024; // 1MB
+    const maxSize = 10 * 1024 * 1024; // 10MB
 
     if (req.file && !allowedTypes.includes(req.file.mimetype)) {
         res.status(400).json({ success: false, message: "Invalid file type" });
@@ -25,7 +25,7 @@ export const validateFile = (req: IResponse, res: Response, next: NextFunction):
     }
 
     if (req.file && req.file.size > maxSize) {
-        res.status(400).json({ success: false, message: "File size exceeds 2MB" });
+        res.status(400).json({ success: false, message: "File size exceeds 10MB" });
         return;
     }
 
