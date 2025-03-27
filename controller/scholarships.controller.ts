@@ -305,6 +305,7 @@ export const updateScholarship = asyncHandler(
 			isActive,
 			department,
 		} = req.body;
+		
 		const providerImage = (req as any).file;
 		const { id } = req.params;
 
@@ -374,7 +375,7 @@ export const updateScholarship = asyncHandler(
 				ageLimit,
 				amountDetails,
 				semRequire,
-				isActive:isActive==="Yes"?true:false,
+				isActive:isActive==="Yes"||"true"?true:false,
 				department,
 			},
 			select: {
