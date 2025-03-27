@@ -33,6 +33,8 @@ export const getAllScholarshipsAdmin = asyncHandler(
 				ageLimit: true,
 				amountDetails: true,
 				semRequire: true,
+				isActive: true,
+				department: true,
 				scholarshipApplicants: {
 					select: {
 						id: true,
@@ -61,7 +63,7 @@ export const getAllScholarshipsAdmin = asyncHandler(
 );
 export const getAllScholarships = asyncHandler(
 	async (req: Request, res: Response) => {
-		const { search,limit,page } = req.query;
+		const { search, limit, page } = req.query;
 
 		const count = await prisma.scholarships.count();
 		const scholarships = await prisma.scholarships.findMany({
@@ -86,6 +88,8 @@ export const getAllScholarships = asyncHandler(
 				ageLimit: true,
 				amountDetails: true,
 				semRequire: true,
+				isActive: true,
+				department: true,
 				scholarshipApplicants: {
 					select: {
 						id: true,
@@ -137,6 +141,8 @@ export const getScholarshipById = asyncHandler(
 				ageLimit: true,
 				amountDetails: true,
 				semRequire: true,
+				isActive: true,
+				department: true,
 				scholarshipApplicants: {
 					select: {
 						id: true,
@@ -185,8 +191,9 @@ export const addNewScholarship = asyncHandler(
 			ageLimit,
 			amountDetails,
 			semRequire,
+			isActive,
+			department,
 		} = req.body;
-		
 		const providerImage = (req as any).file;
 		if (
 			!(
@@ -201,7 +208,8 @@ export const addNewScholarship = asyncHandler(
 				whenToApply &&
 				ageLimit &&
 				amountDetails &&
-				semRequire
+				semRequire &&
+				department
 			)
 		) {
 			res.status(400).json({
@@ -236,7 +244,7 @@ export const addNewScholarship = asyncHandler(
 				subtitle,
 				providerName,
 				providerDepartment,
-				providerPassingYear:parseInt(providerPassingYear),
+				providerPassingYear: parseInt(providerPassingYear),
 				providerImage: fileLink?.url || "",
 				providerImage_public_id: fileLink?.public_id || "",
 				providerDescription,
@@ -246,6 +254,8 @@ export const addNewScholarship = asyncHandler(
 				ageLimit,
 				amountDetails,
 				semRequire,
+				isActive:isActive==="Yes"?true:false,
+				department,
 			},
 			select: {
 				id: true,
@@ -263,6 +273,8 @@ export const addNewScholarship = asyncHandler(
 				ageLimit: true,
 				amountDetails: true,
 				semRequire: true,
+				isActive: true,
+				department: true,
 			},
 		});
 
@@ -290,6 +302,8 @@ export const updateScholarship = asyncHandler(
 			ageLimit,
 			amountDetails,
 			semRequire,
+			isActive,
+			department,
 		} = req.body;
 		const providerImage = (req as any).file;
 		const { id } = req.params;
@@ -308,7 +322,7 @@ export const updateScholarship = asyncHandler(
 				whenToApply &&
 				ageLimit &&
 				amountDetails &&
-				semRequire
+				semRequire && department
 			)
 		) {
 			res.status(400).json({
@@ -360,6 +374,8 @@ export const updateScholarship = asyncHandler(
 				ageLimit,
 				amountDetails,
 				semRequire,
+				isActive:isActive==="Yes"?true:false,
+				department,
 			},
 			select: {
 				id: true,
@@ -377,6 +393,8 @@ export const updateScholarship = asyncHandler(
 				ageLimit: true,
 				amountDetails: true,
 				semRequire: true,
+				isActive: true,
+				department: true,
 			},
 		});
 

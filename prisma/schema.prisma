@@ -47,6 +47,8 @@ model Scholarships {
   ageLimit                String                   @db.VarChar(500)
   amountDetails           String                   @db.VarChar(500)
   semRequire              String                   @default("1st Sem") @db.VarChar(500)
+  isActive                Boolean                  @default(true)
+  department              String                   @default("All") @db.VarChar(500)
   createdAt               DateTime                 @default(now())
   updatedAt               DateTime                 @default(now())
   scholarshipApplicants   ScholarshipApplication[]

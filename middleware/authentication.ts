@@ -13,7 +13,6 @@ const authentication = async (req: Request, res: Response, next: NextFunction) =
         return;
     }
     const token = authHeader.split('token=')[1] || authHeader.split('tokenAdmin=')[1];
-    console.log("Hello",token);
     jwt.verify(token, process.env.JWT_SECRET as string, (err, data) => {
         if (err) {
             res.status(404).json({
