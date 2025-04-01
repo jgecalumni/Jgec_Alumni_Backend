@@ -14,6 +14,7 @@ import NoticeRoute from "./router/notice.route";
 import EventRoute from "./router/event.route";
 import DocRoute from "./router/document.route";
 import GalleryRoute from "./router/gallery.route"
+import ReceiptRoute from "./router/receipt.route";
 import { allCounts } from "./controller/count.controller";
 import authentication from "./middleware/authentication";
 
@@ -46,5 +47,6 @@ app.use("/v1/api/events", EventRoute);
 app.use("/v1/api/documents", DocRoute);
 app.use("/v1/api/gallery", GalleryRoute);
 app.use("/v1/api/all-count", authentication, allCounts);
+app.use("/v1/api/receipt", ReceiptRoute);
 
 app.listen(port, () => console.log("🚀[Server]: listening on port " + port));

@@ -1,5 +1,6 @@
 import fs from "fs"
 import { v2 as cloudinary } from "cloudinary"
+import streamifier from "streamifier"
 
 cloudinary.config({
      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -45,4 +46,20 @@ export const uploadMultipleOnCloudinary = async (files: Express.Multer.File[]) =
        console.error("Cloudinary Multiple Upload Error:", error);
        return [];
      }
+   };
+   export const uploadReceiptToCloudinary = (buffer: Buffer): Promise<string> => {
+     return new Promise((resolve, reject) => {
+          let stream = cloudinary.uploader.upload_stream(
+            { resource_type: "auto", folder: "receipts" }, // Folder in Cloudinary
+            (error, result) => {
+              if (error) return reject(error);
+              if (result && result.secure_url) {
+                resolve(result.secure_url); // Return uploaded file URL
+              } else {
+                reject(new Error("Upload failed: result is undefined or missing secure_url"));
+              }
+            }
+          );
+          streamifier.createReadStream(buffer).pipe(stream);
+        });
    };

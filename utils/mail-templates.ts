@@ -1,7 +1,5 @@
-
 export const WelcomeMail = (name: string) => {
-    return (
-        `<body
+	return `<body
     style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f9; color: #333; line-height: 1.6;">
     <div
         style="max-width: 600px; margin: 20px auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
@@ -54,13 +52,14 @@ export const WelcomeMail = (name: string) => {
             <p>Follow us on our social media channels to stay connected!</p>
         </div>
     </div>
-</body>`
-    )
-}
+</body>`;
+};
 
-export const ScholarshipApplicationMail = (applicant: string, scholarship:string) => {
-    return (
-        `
+export const ScholarshipApplicationMail = (
+	applicant: string,
+	scholarship: string
+) => {
+	return `
         <body
         style="font-family: Arial, sans-serif; line-height: 1.6; background-color: #f4f4f4; padding: 20px; margin: 0;">
         <div
@@ -100,6 +99,185 @@ export const ScholarshipApplicationMail = (applicant: string, scholarship:string
             </p>
         </div>
     </body>
-        `
-    )
-}
+        `;
+};
+
+export const ReceiptSubmitMail = (
+	name: string,
+	amount: number,
+	transactionId: string,
+	donationFor: string
+) => {
+	return `
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f9f9fb; color: #333; line-height: 1.6;">
+    <div style="max-width: 600px; margin: 20px auto; background: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+        <!-- Header Section -->
+        <div style="background-color: #516bb7; color: #ffffff; text-align: center; padding: 25px;">
+            <h1 style="margin: 0; font-size: 22px; font-weight: 600;">Receipt Request Confirmation</h1>
+        </div>
+        
+        <!-- Content Section -->
+        <div style="padding: 25px;">
+            <h4 style="color: #516bb7; font-size: 18px; margin-bottom: 10px;">Dear ${name},</h4>
+            <p style="font-size: 15px; margin-bottom: 15px;">We have successfully received your request for a donation receipt. Below are the details of your request:</p>
+            <div style="background: #f4f4f9; padding: 15px; border-radius: 8px;">
+                <p style="font-size: 15px;"><strong>Name:</strong> ${name}</p>
+                <p style="font-size: 15px;"><strong>Amount:</strong> ₹${amount}</p>
+                <p style="font-size: 15px;"><strong>Donation For:</strong> ${donationFor}</p>
+                <p style="font-size: 15px;"><strong>Transaction ID:</strong> ${transactionId}</p>
+            </div>
+            <p style="font-size: 15px; margin-top: 15px;">Our team is currently processing your request. You will receive your receipt within 3-7 working days. If you have any questions, please feel free to reach out.</p>
+            <p style="font-size: 15px;">Thank you for your generosity and support.</p>
+            <div >
+                <h2 style="color: #080A0D; font-size: 14px;">Best Regards,</h2>
+                <p style="font-size: 14px;">
+                    The <strong>JGEC Alumni Association</strong><br>
+                    <em>"Strengthening Bonds Beyond Graduation"</em>
+                </p>
+            </div>
+        </div>
+        <!-- Footer Section -->
+        <div style="background-color: #506bb6; text-align: center; padding: 15px; font-size: 14px; color: #ffff;">
+            <p>If you have any questions, feel free to reach us.</p>
+            <p>Follow us on our social media channels to stay connected!</p>
+        </div>
+    </div>
+</body>
+`;
+};
+
+export const ReceiptApprovalMail = (
+	name: string,
+	amount: number,
+	transactionId: string,
+	donationFor: string
+) => {
+	return `
+    
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f9f9fb; color: #333; line-height: 1.6;">
+    <div style="max-width: 600px; margin: 20px auto; background: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+        <!-- Header Section -->
+        <div style="background-color: #516bb7; color: #ffffff; text-align: center; padding: 25px;">
+            <h1 style="margin: 0; font-size: 22px; font-weight: 600;">Receipt Request Confirmation</h1>
+        </div>
+        
+        <!-- Content Section -->
+        <div style="padding: 25px;">
+            <h4 style="color: #516bb7; font-size: 18px; margin-bottom: 10px;">Dear Admin,</h4>
+            <p style="font-size: 15px; margin-bottom: 15px;">A new receipt request has been submitted and requires your approval. Here are the details:</p>
+            <div style="background: #f4f4f9; padding: 15px; border-radius: 8px;">
+                <p style="font-size: 15px;"><strong>Name:</strong> ${name}</p>
+                <p style="font-size: 15px;"><strong>Amount:</strong> ₹${amount}</p>
+                <p style="font-size: 15px;"><strong>Donation For:</strong> ${donationFor}</p>
+                <p style="font-size: 15px;"><strong>Transaction ID:</strong> ${transactionId}</p>
+            </div>
+            <p style="font-size: 15px; margin-top: 15px;">Please review and approve or reject this request in the admin panel.</p>
+            <p style="font-size: 15px;">Thank you for your attention to this request.</p>
+            <div >
+                <h2 style="color: #080A0D; font-size: 14px;">Best Regards,</h2>
+                <p style="font-size: 14px;">
+                    The <strong>JGEC Alumni Association</strong><br>
+                    <em>"Strengthening Bonds Beyond Graduation"</em>
+                </p>
+            </div>
+        </div>
+        
+        
+        
+        <!-- Footer Section -->
+        <!-- Footer Section -->
+        <div style="background-color: #506bb6; text-align: center; padding: 15px; font-size: 14px; color: #ffff;">
+            <p>If you have any questions, feel free to reach us.</p>
+            <p>Follow us on our social media channels to stay connected!</p>
+        </div>
+    </div>
+</body>
+`;
+};
+
+export const approvedReceiptMail = (
+	name: string,
+	amount: number,
+	transactionId: string,
+	donationFor: string
+) => {
+	return `
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f9f9fb; color: #333; line-height: 1.6;">
+    <div style="max-width: 600px; margin: 20px auto; background: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+        <!-- Header Section -->
+        <div style="background-color: #516bb7; color: #ffffff; text-align: center; padding: 25px;">
+            <h1 style="margin: 0; font-size: 22px; font-weight: 600;">Receipt Request Approved</h1>
+        </div>
+        
+        <!-- Content Section -->
+        <div style="padding: 25px;">
+            <h4 style="color: #516bb7; font-size: 18px; margin-bottom: 10px;">Dear ${name},</h4>
+            <p style="font-size: 15px; margin-bottom: 15px;">We are pleased to inform you that your receipt request has been approved. Below are the details of your donation:</p>
+            <div style="background: #f4f4f9; padding: 15px; border-radius: 8px;">
+                <p style="font-size: 15px;"><strong>Name:</strong> ${name}</p>
+                <p style="font-size: 15px;"><strong>Amount:</strong> ₹${amount}</p>
+                <p style="font-size: 15px;"><strong>Donation For:</strong> ${donationFor}</p>
+                <p style="font-size: 15px;"><strong>Transaction ID:</strong> ${transactionId}</p>
+            </div>
+            <p style="font-size: 15px; margin-top: 15px;">Thank you for your generous support. Your contribution helps us in our mission to strengthen the bonds within our community.</p>
+            <p style="font-size: 15px;">If you have any questions or need further assistance, please feel free to reach out. Online receipt is attached below.</p>
+            <div >
+                <h2 style="color: #080A0D; font-size: 14px;">Best Regards,</h2>
+                <p style="font-size: 14px;">
+                    The <strong>JGEC Alumni Association</strong><br>
+                    <em>"Strengthening Bonds Beyond Graduation"</em>
+                </p>
+            </div>
+        </div>
+        <!-- Footer Section -->
+        <div style="background-color: #506bb6; text-align: center; padding: 15px; font-size: 14px; color: #ffff;">
+            <p>If you have any questions, feel free to reach us.</p>
+            <p>Follow us on our social media channels to stay connected!</p>
+        </div>
+    </div>
+</body>
+`;
+};
+
+export const denyReceiptMail = (
+	name: string,
+	amount: number,
+	transactionId: string,
+	donationFor: string
+) => {
+	return `
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f9f9fb; color: #333; line-height: 1.6;">
+    <div style="max-width: 600px; margin: 20px auto; background: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+        <!-- Header Section -->
+        <div style="background-color: red; color: #ffffff; text-align: center; padding: 25px;">
+            <h1 style="margin: 0; font-size: 22px; font-weight: 600;">Receipt Request Denied</h1>
+        </div>
+        
+        <!-- Content Section -->
+        <div style="padding: 25px;">
+            <h4 style="color: #516bb7; font-size: 18px; margin-bottom: 10px;">Dear ${name},</h4>
+            <p style="font-size: 15px; margin-bottom: 15px;">We regret to inform you that your receipt request has been denied. Below are the details of your donation:</p>
+            <div style="background: #f4f4f9; padding: 15px; border-radius: 8px;">
+                <p style="font-size: 15px;"><strong>Name:</strong> ${name}</p>
+                <p style="font-size: 15px;"><strong>Amount:</strong> ₹${amount}</p>
+                <p style="font-size: 15px;"><strong>Donation For:</strong> ${donationFor}</p>
+                <p style="font-size: 15px;"><strong>Transaction ID:</strong> ${transactionId}</p>
+            </div>
+            <p style="font-size: 15px; margin-top: 15px;">If you have any questions or need further assistance, please feel free to reach out.</p>
+            <div >
+                <h2 style="color: #080A0D; font-size: 14px;">Best Regards,</h2>
+                <p style="font-size: 14px;">
+                    The <strong>JGEC Alumni Association</strong><br>
+                    <em>"Strengthening Bonds Beyond Graduation"</em>
+                </p>
+            </div>
+        </div>
+        <!-- Footer Section -->
+        <div style="background-color: #506bb6; text-align: center; padding: 15px; font-size: 14px; color: #ffff;">
+            <p>If you have any questions, feel free to reach us.</p>
+            <p>Follow us on our social media channels to stay connected!</p>
+        </div>
+    </div>
+</body>
+`;
+};
