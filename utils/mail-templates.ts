@@ -126,7 +126,7 @@ export const ReceiptSubmitMail = (
                 <p style="font-size: 15px;"><strong>Donation For:</strong> ${donationFor}</p>
                 <p style="font-size: 15px;"><strong>Transaction ID:</strong> ${transactionId}</p>
             </div>
-            <p style="font-size: 15px; margin-top: 15px;">Our team is currently processing your request. You will receive your receipt within 3-7 working days. If you have any questions, please feel free to reach out.</p>
+            <p style="font-size: 15px; margin-top: 15px;">Our team is currently processing your request. You will receive your receipt within 7-10 working days. If you have any questions, please feel free to reach out.</p>
             <p style="font-size: 15px;">Thank you for your generosity and support.</p>
             <div >
                 <h2 style="color: #080A0D; font-size: 14px;">Best Regards,</h2>
@@ -138,7 +138,7 @@ export const ReceiptSubmitMail = (
         </div>
         <!-- Footer Section -->
         <div style="background-color: #506bb6; text-align: center; padding: 15px; font-size: 14px; color: #ffff;">
-            <p>If you have any questions, feel free to reach us.</p>
+            <p>If you have any questions, feel free to reach out Dr. Mousam Chatterjee (+91 9433480022).</p>
             <p>Follow us on our social media channels to stay connected!</p>
         </div>
     </div>
@@ -187,7 +187,7 @@ export const ReceiptApprovalMail = (
         <!-- Footer Section -->
         <!-- Footer Section -->
         <div style="background-color: #506bb6; text-align: center; padding: 15px; font-size: 14px; color: #ffff;">
-            <p>If you have any questions, feel free to reach us.</p>
+            <p>If you have any questions, feel free to reach out Dr. Mousam Chatterjee (+91 9433480022).</p>
             <p>Follow us on our social media channels to stay connected!</p>
         </div>
     </div>
@@ -231,7 +231,7 @@ export const approvedReceiptMail = (
         </div>
         <!-- Footer Section -->
         <div style="background-color: #506bb6; text-align: center; padding: 15px; font-size: 14px; color: #ffff;">
-            <p>If you have any questions, feel free to reach us.</p>
+            <p>If you have any questions, feel free to reach out Dr. Mousam Chatterjee (+91 9433480022).</p>
             <p>Follow us on our social media channels to stay connected!</p>
         </div>
     </div>
@@ -274,7 +274,7 @@ export const denyReceiptMail = (
         </div>
         <!-- Footer Section -->
         <div style="background-color: #506bb6; text-align: center; padding: 15px; font-size: 14px; color: #ffff;">
-            <p>If you have any questions, feel free to reach us.</p>
+            <p>If you have any questions, feel free to reach out Dr. Mousam Chatterjee (+91 9433480022).</p>
             <p>Follow us on our social media channels to stay connected!</p>
         </div>
     </div>

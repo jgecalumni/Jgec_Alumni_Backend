@@ -17,7 +17,7 @@ import { generateReceiptPDF } from "../utils/pdf";
 import { error } from "console";
 export const receiptRequest = asyncHandler(
 	async (req: Request, res: Response) => {
-		const { name, phone, email, amount, donationFor, transactionId } = req.body;
+		const { name, phone, email, amount, donationFor,passoutYear, transactionId } = req.body;
 		const receipt = (req as any).file;
 		if (!(name && amount && email && transactionId && donationFor && phone)) {
 			res.status(400).json({
@@ -62,6 +62,7 @@ export const receiptRequest = asyncHandler(
 				amount: parseInt(amount),
 				donationFor,
 				phone,
+				passoutYear,
 				transactionId,
 				receipt: receiptImage.secure_url,
 				receipt_public_id: receiptImage.public_id,
@@ -131,6 +132,7 @@ export const getAllReceiptRequest = asyncHandler(
 				name: true,
 				email: true,
 				phone: true,
+				passoutYear: true,
 				amount: true,
 				donationFor: true,
 				transactionId: true,

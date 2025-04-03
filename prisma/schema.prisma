@@ -170,6 +170,7 @@ model ReceiptDetails {
   transactionId              String
   donationFor                String
   phone                      String
+  passoutYear                Int      @default(0)
   paymentStatus              String   @default("Pending")
   receipt                    String?
   receipt_public_id          String?
