@@ -19,6 +19,7 @@ export const receiptRequest = asyncHandler(
 	async (req: Request, res: Response) => {
 		const { name, phone, email, amount, donationFor,passoutYear, transactionId } = req.body;
 		const receipt = (req as any).file;
+		
 		if (!(name && amount && email && transactionId && donationFor && phone)) {
 			res.status(400).json({
 				success: false,
@@ -27,14 +28,14 @@ export const receiptRequest = asyncHandler(
 			});
 			return;
 		}
-		if (!receipt) {
-			res.status(400).json({
-				success: false,
-				message: "Please provide photo",
-				error: true,
-			});
-			return;
-		}
+		// if (!receipt) {
+		// 	res.status(400).json({
+		// 		success: false,
+		// 		message: "Please provide photo",
+		// 		error: true,
+		// 	});
+		// 	return;
+		// }
 		const isExist = await prisma.receiptDetails.findFirst({
 			where: { transactionId },
 		});
@@ -46,15 +47,15 @@ export const receiptRequest = asyncHandler(
 			});
 			return;
 		}
-		const receiptImage = await uploadOnCloudinary(receipt.path);
-		if (!receiptImage) {
-			res.status(500).json({
-				success: false,
-				message: "Failed to upload receipt image",
-				error: true,
-			});
-			return;
-		}
+		// const receiptImage = await uploadOnCloudinary(receipt.path);
+		// if (!receiptImage) {
+		// 	res.status(500).json({
+		// 		success: false,
+		// 		message: "Failed to upload receipt image",
+		// 		error: true,
+		// 	});
+		// 	return;
+		// }
 		const receiptDetails = await prisma.receiptDetails.create({
 			data: {
 				name,
@@ -62,10 +63,10 @@ export const receiptRequest = asyncHandler(
 				amount: parseInt(amount),
 				donationFor,
 				phone,
-				passoutYear,
+				passoutYear: parseInt(passoutYear),
 				transactionId,
-				receipt: receiptImage.secure_url,
-				receipt_public_id: receiptImage.public_id,
+				receipt: "",
+				receipt_public_id: "",
 			},
 		});
 		if (!receiptDetails) {
