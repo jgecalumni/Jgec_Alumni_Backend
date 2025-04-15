@@ -17,10 +17,29 @@ import { generateReceiptPDF } from "../utils/pdf";
 import { error } from "console";
 export const receiptRequest = asyncHandler(
 	async (req: Request, res: Response) => {
-		const { name, phone, email, amount, donationFor,passoutYear, transactionId } = req.body;
+		const {
+			name,
+			phone,
+			email,
+			amount,
+			donationFor,
+			passoutYear,
+			transactionId,
+			date,
+		} = req.body;
 		const receipt = (req as any).file;
-		
-		if (!(name && amount && email && transactionId && donationFor && phone)) {
+
+		if (
+			!(
+				name &&
+				amount &&
+				email &&
+				transactionId &&
+				donationFor &&
+				phone &&
+				date
+			)
+		) {
 			res.status(400).json({
 				success: false,
 				message: "Please provide all required fields",
@@ -61,6 +80,7 @@ export const receiptRequest = asyncHandler(
 				name,
 				email,
 				amount: parseInt(amount),
+				date,
 				donationFor,
 				phone,
 				passoutYear: parseInt(passoutYear),
@@ -225,10 +245,11 @@ export const approveReceipt = asyncHandler(
 			approvedReceiptMail(
 				receipt.name,
 				receipt.amount,
-				receipt.transactionId,
+				receipt.transactionId || "Not Given",
 				receipt.donationFor
 			),
-			pdfBuffer
+			pdfBuffer,
+			receipt.name
 		);
 		res.status(200).json({
 			success: true,
@@ -259,7 +280,7 @@ export const denyReceipt = asyncHandler(async (req: Request, res: Response) => {
 		denyReceiptMail(
 			receipt.name,
 			receipt.amount,
-			receipt.transactionId,
+			receipt.transactionId || "Not Given",
 			receipt.donationFor
 		)
 	);

@@ -1,4 +1,6 @@
 import PDFDocument from "pdfkit";
+import { format } from "date-fns";
+import { toWords } from "number-to-words";
 
 export const generateReceiptPDF = async (receipt: any): Promise<Buffer> => {
 	return new Promise((resolve, reject) => {
@@ -10,44 +12,40 @@ export const generateReceiptPDF = async (receipt: any): Promise<Buffer> => {
 		doc.on("error", (err) => reject(err));
 
 		// Header
+		doc.image("public/Logo.png", 40, 40, { width: 500 });
+		doc.moveDown(10);
+
 		doc
 			.font("Helvetica-Bold")
 			.fontSize(14)
-			.text("THE JALPAIGURI GOVERNMENT ENGINEERING COLLEGE", {
-				align: "center",
-			});
-		doc
-			.font("Helvetica")
-			.fontSize(12)
-			.text("ALUMNI ASSOCIATION", { align: "center" });
+			.text("Money Receipt", { align: "center" });
+		doc.underline(248, 200, 100, 3);
+
+		// Serial No and Date
+		doc.font("Helvetica").fontSize(10.3).text(`Sl. No: ${receipt.id}`, 50, 250);
+		doc.text(`Date: ${format(receipt.createdAt, "dd/MM/yyyy")}`, 430, 250);
 
 		doc.moveDown(4);
 
-		// Serial No and Date
-		doc.fontSize(10.3).text(`Sl. No: ${receipt.id}`, 50, 150);
-		doc.text(`Date: ${new Date().toLocaleDateString()}`, 430, 150);
-
-		doc.moveDown(3.5);
-
 		// Registration Number
-		doc.text(
-			"Unique Registration Number: AADAT3213C/10/15-16/S-0090",
-			50,
-			doc.y
-		);
-
-		// Receipt Body
-		doc.moveDown(3);
 
 		// Received from
-		doc.text(`Received with thanks from Sri / Smt: ${receipt.name}`, 50, doc.y);
+		doc.text(`Received with thanks from Sri/Smt: ${receipt.name}`, 50, doc.y);
 		// let receivedFromY = doc.y;
 		// doc.underline(220, receivedFromY, 200, 1);
 
 		doc.moveDown(2);
 
 		// Sum of rupees
-		doc.text(`Donation Amount: Rs. ${receipt.amount}`, 50, doc.y);
+		doc.text(
+			`Donation Amount: Rs.${receipt.amount}/- (${
+				toWords(receipt.amount).charAt(0).toUpperCase() +
+				toWords(receipt.amount).slice(1) +
+				" rupees only."
+			}) (Credited on: ${format(receipt.date, "dd/MM/yyyy")})`,
+			50,
+			doc.y
+		);
 		// let sumOfRupeesY = doc.y;
 		// doc.text("_____________________________", 200, sumOfRupeesY);
 		// doc.underline(200, sumOfRupeesY + 2, 150, 1);
@@ -60,19 +58,21 @@ export const generateReceiptPDF = async (receipt: any): Promise<Buffer> => {
 		// doc.text("_____________________________", 200, donationForY);
 		// doc.underline(200, donationForY + 2, 350, 1);
 
-		doc.moveDown(3);
-
-		// Amount
-		doc.fontSize(10.3).text(`Rs. ${receipt.amount}`, { align: "right" });
 		// let amountY = doc.y;
 		// doc.text("_______________", { align: "right", x: 550 });
 		// doc.underline(550, amountY + 2, 25, 1);
 
-		doc.moveDown(2);
+		doc.moveDown(5);
+		doc
+			.font("Helvetica")
+			.text(
+				`Note: This is a digitally generated receipt and does not require a physical signature.`
+			);
 
 		// Footer
-		doc.moveDown(3);
+		doc.moveDown(4);
 		doc
+			.font("Helvetica-Bold")
 			.fontSize(10.3)
 			.text(
 				"Donations are exempted from Income Tax under section 80G(5) VI of the Income Tax Act, 1961 vide " +

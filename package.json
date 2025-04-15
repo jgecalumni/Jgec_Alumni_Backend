@@ -20,6 +20,7 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "crypto-hash": "^3.1.0",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
@@ -27,6 +28,7 @@
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.10.0",
     "nodemon": "^3.1.9",
+    "number-to-words": "^1.2.4",
     "pdfkit": "^0.16.0",
     "streamifier": "^0.1.1",
     "ts-node": "^10.9.2"
@@ -40,6 +42,7 @@
     "@types/multer": "^1.4.12",
     "@types/node": "^22.10.10",
     "@types/nodemailer": "^6.4.17",
+    "@types/number-to-words": "^1.2.3",
     "@types/pdfkit": "^0.13.9",
     "@types/streamifier": "^0.1.2",
     "prisma": "^6.5.0",

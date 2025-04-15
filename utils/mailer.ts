@@ -36,7 +36,8 @@ export const sendMailWithAttachment = async (
 	email: string,
 	subject: string,
 	html: string,
-	pdfBuffer: Buffer
+	pdfBuffer: Buffer,
+	name: string
 ) => {
 	const transport = nodemailer.createTransport({
 		service: "Gmail",
@@ -56,7 +57,7 @@ export const sendMailWithAttachment = async (
 		html, // Send HTML email
 		attachments: [
 			{
-				filename: "Receipt.pdf",
+				filename: "Receipt_" + name.replace(" ", "_") + ".pdf",
 				content: pdfBuffer,
 				encoding: "base64",
 			},

@@ -40,7 +40,7 @@ export const WelcomeMail = (name: string) => {
                 <h2 style="color: #080A0D; font-size: 14px;">Best Regards,</h2>
                 <p style="font-size: 14px;">
                     The <strong>JGEC Alumni Association</strong><br>
-                    <em>"Strengthening Bonds Beyond Graduation"</em>
+                    <em>"Driven by Gratitude, Bonded with Nostalgia"</em>
                 </p>
             </div>
         </div>
@@ -132,7 +132,7 @@ export const ReceiptSubmitMail = (
                 <h2 style="color: #080A0D; font-size: 14px;">Best Regards,</h2>
                 <p style="font-size: 14px;">
                     The <strong>JGEC Alumni Association</strong><br>
-                    <em>"Strengthening Bonds Beyond Graduation"</em>
+                    <em>"Driven by Gratitude, Bonded with Nostalgia"</em>
                 </p>
             </div>
         </div>
@@ -177,7 +177,7 @@ export const ReceiptApprovalMail = (
                 <h2 style="color: #080A0D; font-size: 14px;">Best Regards,</h2>
                 <p style="font-size: 14px;">
                     The <strong>JGEC Alumni Association</strong><br>
-                    <em>"Strengthening Bonds Beyond Graduation"</em>
+                    <em>"Driven by Gratitude, Bonded with Nostalgia"</em>
                 </p>
             </div>
         </div>
@@ -225,7 +225,7 @@ export const approvedReceiptMail = (
                 <h2 style="color: #080A0D; font-size: 14px;">Best Regards,</h2>
                 <p style="font-size: 14px;">
                     The <strong>JGEC Alumni Association</strong><br>
-                    <em>"Strengthening Bonds Beyond Graduation"</em>
+                    <em>"Driven by Gratitude, Bonded with Nostalgia"</em>
                 </p>
             </div>
         </div>
@@ -268,7 +268,7 @@ export const denyReceiptMail = (
                 <h2 style="color: #080A0D; font-size: 14px;">Best Regards,</h2>
                 <p style="font-size: 14px;">
                     The <strong>JGEC Alumni Association</strong><br>
-                    <em>"Strengthening Bonds Beyond Graduation"</em>
+                    <em>"Driven by Gratitude, Bonded with Nostalgia"</em>
                 </p>
             </div>
         </div>
