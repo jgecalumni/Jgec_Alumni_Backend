@@ -69,7 +69,7 @@ export const adminLogin = asyncHandler(async (req: Request, res: Response) => {
 	});
 
 	response.status(200).json({
-		message: "Login successfu",
+		message: "Login successful",
 		accessToken,
 		error: false,
 		success: true,
