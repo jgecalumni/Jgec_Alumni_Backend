@@ -28,6 +28,7 @@ app.use(
 			process.env.FORNTEND_URI_DEV as string,
 			process.env.FORNTEND_URI_PROD as string,
 			process.env.FORNTEND_URI_MAIN as string,
+			process.env.FORNTEND_URI_MAIN_TWO as string,
 		],
 		methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
 		credentials: true,
