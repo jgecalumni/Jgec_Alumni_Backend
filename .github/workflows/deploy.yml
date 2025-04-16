@@ -46,3 +46,4 @@ jobs:
             npm install
             npm run build
             pm2 restart alumni_backend || pm2 start dist/index.js --name "alumni_backend"
+            pm2 save
