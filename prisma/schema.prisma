@@ -18,15 +18,16 @@ model members {
   name                String
   email               String   @unique
   password            String
-  studentId           String   @unique
+  studentId           String?  @unique
+  nickname            String?   @default("")
   passingYear         Int
   department          String
   residentialAddress  String
   professionalAddress String
   photo               String
   photo_public_id     String
-  receipt             String
-  receipt_public_id   String
+  receipt             String?
+  receipt_public_id   String?
   createdAt           DateTime @default(now())
   updatedAt           DateTime @default(now())
 }

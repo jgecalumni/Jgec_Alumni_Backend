@@ -85,6 +85,7 @@ export const registerMember = asyncHandler(
 			studentId,
 			passingYear,
 			department,
+			nickname,
 			residentialAddress,
 			professionalAddress,
 		} = req.body;
@@ -96,12 +97,12 @@ export const registerMember = asyncHandler(
 				name &&
 				email &&
 				password &&
-				studentId &&
 				passingYear &&
 				department &&
 				residentialAddress &&
 				professionalAddress &&
 				photo &&
+				nickname &&
 				receipt
 			)
 		) {
@@ -139,6 +140,7 @@ export const registerMember = asyncHandler(
 				email,
 				password: hashedPassword,
 				studentId,
+				nickname,
 				passingYear: parseInt(passingYear),
 				department,
 				residentialAddress,
