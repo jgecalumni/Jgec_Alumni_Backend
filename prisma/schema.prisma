@@ -168,6 +168,7 @@ model ReceiptDetails {
   email                      String
   amount                     Int
   transactionId              String
+  gender                     String   @default("Male")
   panId                      String
   date                       String   @default("")
   donationFor                String

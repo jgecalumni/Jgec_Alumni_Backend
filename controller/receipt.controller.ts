@@ -23,6 +23,7 @@ export const receiptRequest = asyncHandler(
 			email,
 			amount,
 			panId,
+			gender,
 			donationFor,
 			passoutYear,
 			transactionId,
@@ -38,7 +39,7 @@ export const receiptRequest = asyncHandler(
 				transactionId &&
 				donationFor &&
 				phone &&
-				date && panId
+				date && panId && gender
 			)
 		) {
 			res.status(400).json({
@@ -83,6 +84,7 @@ export const receiptRequest = asyncHandler(
 				amount: parseInt(amount),
 				date,
 				panId,
+				gender,
 				donationFor,
 				phone,
 				passoutYear: parseInt(passoutYear),
@@ -156,6 +158,7 @@ export const getAllReceiptRequest = asyncHandler(
 				email: true,
 				phone: true,
 				panId: true,
+				gender: true,
 				passoutYear: true,
 				amount: true,
 				donationFor: true,
