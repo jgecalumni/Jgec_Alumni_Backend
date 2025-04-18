@@ -47,7 +47,7 @@ export const WelcomeMail = (name: string) => {
 
         <!-- Footer Section -->
         <div style="background-color: #f4f4f9; text-align: center; padding: 15px; font-size: 14px; color: #555;">
-            <p>If you have any questions, feel free to reach us at <a href="mailto:alumni@jgec.ac.in"
+            <p>If you have any questions, feel free to reach us at <a href="mailto:alumnijgec320@gmail.com"
                     style="color: #516bb7; text-decoration: none;">alumnijgec320@gmail.com</a>.</p>
             <p>Follow us on our social media channels to stay connected!</p>
         </div>
