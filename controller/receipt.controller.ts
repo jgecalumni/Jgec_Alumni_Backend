@@ -38,7 +38,7 @@ export const receiptRequest = asyncHandler(
 				transactionId &&
 				donationFor &&
 				phone &&
-				date 
+				date && panId
 			)
 		) {
 			res.status(400).json({
