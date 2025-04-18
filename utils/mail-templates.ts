@@ -5,7 +5,7 @@ export const WelcomeMail = (name: string) => {
         style="max-width: 600px; margin: 20px auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
         <!-- Header Section -->
         <div style="background-color: #a8b9ed; color: #080A0D; text-align: center; padding: 20px;">
-            <img src="https://cloud.appwrite.io/v1/storage/buckets/66241b72624e71cbcd6a/files/679dbeb90018169c00fd/view?project=662415d3bdf8f8d8078b&mode=admin"
+            <img src="https://res.cloudinary.com/daanphoru/image/upload/v1744962756/Logo_vx2vnz.png"
                 alt="JGEC Alumni Association Logo" style="max-width: 160px; margin-bottom: 10px; object-fit: contain;">
             <h1 style="margin: 0; font-size: 20px; font-weight: 500;">Welcome to Jalpaiguri Government Engineering
                 College Alumni Association</h1>
