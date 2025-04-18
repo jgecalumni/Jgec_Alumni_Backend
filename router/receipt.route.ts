@@ -15,7 +15,7 @@ const router = express.Router();
 router.route("/request").post(receiptRequest);
 router.route("/").get(authentication,getAllReceiptRequest);
 router.route("/delete/:id").delete(authentication,deleteReceipt);
-router.route("/approve/:id").patch(authentication,approveReceipt);
+router.route("/approve/:id").patch(approveReceipt);
 router.route("/deny/:id").patch(authentication,denyReceipt);
 
 export default router;

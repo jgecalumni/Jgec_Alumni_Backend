@@ -168,7 +168,8 @@ model ReceiptDetails {
   email                      String
   amount                     Int
   transactionId              String
-  date                       String @default("")
+  panId                      String
+  date                       String   @default("")
   donationFor                String
   phone                      String
   passoutYear                Int      @default(0)

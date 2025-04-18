@@ -36,6 +36,12 @@ export const generateReceiptPDF = async (receipt: any): Promise<Buffer> => {
 
 		doc.moveDown(2);
 
+		doc.text(`PAN: ${receipt.panId}`, 50, doc.y);
+		// let receivedFromY = doc.y;
+		// doc.underline(220, receivedFromY, 200, 1);
+
+		doc.moveDown(2);
+
 		// Sum of rupees
 		doc.text(
 			`Donation Amount: Rs.${receipt.amount}/- (${
