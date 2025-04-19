@@ -102,8 +102,8 @@ export const registerMember = asyncHandler(
 				residentialAddress &&
 				professionalAddress &&
 				photo &&
-				nickname &&
-				receipt
+				nickname
+				
 			)
 		) {
 			res.status(400).json({
