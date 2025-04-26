@@ -213,12 +213,12 @@ export const createGalleryImage = asyncHandler(
 			return;
 		}
 
-		// Check file size for each file (10MB limit)
+		// Check file size for each file (30 limit)
 		for (const file of files) {
-			if (file.size > 10 * 1024 * 1024) {
+			if (file.size > 30 * 1024 * 1024) {
 				res.status(400).json({
 					success: false,
-					message: "Each file must be less than 10MB",
+					message: "Each file must be less than 30",
 					error: true,
 				});
 				return;
@@ -330,10 +330,10 @@ export const upadateGalleryImage = asyncHandler(
 			});
 			return;
 		}
-		if (file && file.size > 10 * 1024 * 1024) {
+		if (file && file.size > 30 * 1024 * 1024) {
 			res.status(400).json({
 				success: false,
-				message: "File size must be less than 10MB",
+				message: "File size must be less than 30",
 				error: true,
 			});
 			return;
