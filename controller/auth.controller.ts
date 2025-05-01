@@ -27,6 +27,7 @@ interface IResponse extends Response {
 
 export const adminLogin = asyncHandler(async (req: Request, res: Response) => {
 	const { email, password } = req.body;
+
 	if (!(email && password)) {
 		res.status(400).json({
 			message: "Email and password are required",
@@ -36,18 +37,19 @@ export const adminLogin = asyncHandler(async (req: Request, res: Response) => {
 		return;
 	}
 
-	const checkEmail = email === process.env.ADMIN_EMAIL;
-	const checkPassword = password === process.env.ADMIN_PASSWORD;
+	let role = null;
 
-	if (!checkEmail) {
-		res.status(401).json({
-			message: "Admin not exists",
-			error: true,
-			success: false,
-		});
-		return;
-	}
-	if (!checkPassword) {
+	if (
+		email === process.env.ADMIN_EMAIL &&
+		password === process.env.ADMIN_PASSWORD
+	) {
+		role = "admin";
+	} else if (
+		email === process.env.MONEY_EMAIL &&
+		password === process.env.MONEY_PASSWORD
+	) {
+		role = "money";
+	} else {
 		res.status(401).json({
 			message: "Invalid credentials",
 			error: true,
@@ -56,12 +58,17 @@ export const adminLogin = asyncHandler(async (req: Request, res: Response) => {
 		return;
 	}
 
-	// generate token & cookies
-	const accessToken = jwt.sign({ email }, process.env.JWT_SECRET as string, {
-		expiresIn: "1D",
-	});
+	const accessToken = jwt.sign(
+		{ email, role },
+		process.env.JWT_SECRET as string,
+		{
+			expiresIn: "1d",
+		}
+	);
 
-	const response = res.cookie("tokenAdmin", accessToken, {
+	const cookieRole = role === "admin" ? "tokenAdmin" : "tokenMoney";
+
+	const response = res.cookie(cookieRole, accessToken, {
 		httpOnly: true,
 		secure: true,
 		sameSite: "none",
@@ -70,6 +77,7 @@ export const adminLogin = asyncHandler(async (req: Request, res: Response) => {
 
 	response.status(200).json({
 		message: "Login successful",
+		role,
 		accessToken,
 		error: false,
 		success: true,
@@ -103,7 +111,6 @@ export const registerMember = asyncHandler(
 				professionalAddress &&
 				photo &&
 				nickname
-				
 			)
 		) {
 			res.status(400).json({
