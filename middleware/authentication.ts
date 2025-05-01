@@ -27,7 +27,7 @@ const authentication = async (
 				error: true,
 				success: false,
 			});
-		} else {
+		} else {			
 			next();
 		}
 	});

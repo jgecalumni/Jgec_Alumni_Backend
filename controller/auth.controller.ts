@@ -68,7 +68,7 @@ export const adminLogin = asyncHandler(async (req: Request, res: Response) => {
 
 	const cookieRole = role === "admin" ? "tokenAdmin" : "tokenMoney";
 
-	const response = res.cookie("tokenAdmin", accessToken, {
+	const response = res.cookie(cookieRole, accessToken, {
 		httpOnly: true,
 		secure: true,
 		sameSite: "none",
@@ -267,6 +267,12 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
 });
 export const adminlogout = asyncHandler(async (req: Request, res: Response) => {
 	res.clearCookie("tokenAdmin", {
+		httpOnly: true,
+		secure: true,
+		sameSite: "none",
+		domain: ".jgecalumni.in",
+	});
+	res.clearCookie("tokenMoney", {
 		httpOnly: true,
 		secure: true,
 		sameSite: "none",
