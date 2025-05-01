@@ -68,7 +68,7 @@ export const adminLogin = asyncHandler(async (req: Request, res: Response) => {
 
 	const cookieRole = role === "admin" ? "tokenAdmin" : "tokenMoney";
 
-	const response = res.cookie(cookieRole, accessToken, {
+	const response = res.cookie("tokenAdmin", accessToken, {
 		httpOnly: true,
 		secure: true,
 		sameSite: "none",
