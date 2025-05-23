@@ -2,6 +2,9 @@ import { Request, Response } from "express";
 import prisma from "../prisma";
 import { asyncHandler } from "../utils/asyncHandler";
 import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary";
+import { sendMail } from "../utils/mailer";
+import { ScholarshipApplicationMail } from "../utils/mail-templates";
+import { get } from "http";
 
 // all scholarships controller functions - create, update, delete and get all scholarships
 export const getAllScholarshipsAdmin = asyncHandler(
@@ -40,10 +43,29 @@ export const getAllScholarshipsAdmin = asyncHandler(
 						id: true,
 						name: true,
 						email: true,
-						mobile: true,
+						contactHome: true,
+						contact: true,
 						department: true,
-						hsPercentage: true,
-						btechResults: true,
+						studentId: true,
+						dob: true,
+						fatherOccupation: true,
+						numberofdirectfamilyMembers: true,
+						totalEarningMembers: true,
+						totalFamilyIncome: true,
+						eachFamilyIncome: true,
+						jgecIntakeYear: true,
+						jgecPassingYear: true,
+						extraCurricularActivities: true,
+						percentHigherSecondary: true,
+						sem_1st: true,
+						sem_2nd: true,
+						sem_3rd: true,
+						sem_4th: true,
+						sem_5th: true,
+						average: true,
+						residentialAddress: true,
+						specialAchievement: true,
+						jobCampusing: true,
 					},
 				},
 			},
@@ -95,10 +117,29 @@ export const getAllScholarships = asyncHandler(
 						id: true,
 						name: true,
 						email: true,
-						mobile: true,
+						contactHome: true,
+						contact: true,
 						department: true,
-						hsPercentage: true,
-						btechResults: true,
+						studentId: true,
+						dob: true,
+						fatherOccupation: true,
+						numberofdirectfamilyMembers: true,
+						totalEarningMembers: true,
+						totalFamilyIncome: true,
+						eachFamilyIncome: true,
+						jgecIntakeYear: true,
+						jgecPassingYear: true,
+						extraCurricularActivities: true,
+						percentHigherSecondary: true,
+						sem_1st: true,
+						sem_2nd: true,
+						sem_3rd: true,
+						sem_4th: true,
+						sem_5th: true,
+						average: true,
+						residentialAddress: true,
+						specialAchievement: true,
+						jobCampusing: true,
 					},
 				},
 			},
@@ -148,10 +189,29 @@ export const getScholarshipById = asyncHandler(
 						id: true,
 						name: true,
 						email: true,
-						mobile: true,
+						contactHome: true,
+						contact: true,
 						department: true,
-						hsPercentage: true,
-						btechResults: true,
+						studentId: true,
+						dob: true,
+						fatherOccupation: true,
+						numberofdirectfamilyMembers: true,
+						totalEarningMembers: true,
+						totalFamilyIncome: true,
+						eachFamilyIncome: true,
+						jgecIntakeYear: true,
+						jgecPassingYear: true,
+						extraCurricularActivities: true,
+						percentHigherSecondary: true,
+						sem_1st: true,
+						sem_2nd: true,
+						sem_3rd: true,
+						sem_4th: true,
+						sem_5th: true,
+						average: true,
+						residentialAddress: true,
+						specialAchievement: true,
+						jobCampusing: true,
 					},
 				},
 			},
@@ -254,7 +314,7 @@ export const addNewScholarship = asyncHandler(
 				ageLimit,
 				amountDetails,
 				semRequire,
-				isActive:isActive==="Yes"?true:false,
+				isActive: isActive === "Yes" ? true : false,
 				department,
 			},
 			select: {
@@ -305,7 +365,7 @@ export const updateScholarship = asyncHandler(
 			isActive,
 			department,
 		} = req.body;
-		
+
 		const providerImage = (req as any).file;
 		const { id } = req.params;
 
@@ -323,7 +383,8 @@ export const updateScholarship = asyncHandler(
 				whenToApply &&
 				ageLimit &&
 				amountDetails &&
-				semRequire && department
+				semRequire &&
+				department
 			)
 		) {
 			res.status(400).json({
@@ -375,7 +436,7 @@ export const updateScholarship = asyncHandler(
 				ageLimit,
 				amountDetails,
 				semRequire,
-				isActive:isActive==="Yes"||"true"?true:false,
+				isActive: isActive === "Yes" || "true" ? true : false,
 				department,
 			},
 			select: {
@@ -460,24 +521,30 @@ export const getAllScholarshipApplications = asyncHandler(
 			select: {
 				id: true,
 				name: true,
+				email: true,
+				contactHome: true,
+				contact: true,
+				department: true,
 				studentId: true,
 				dob: true,
-				homeContactNo: true,
-				email: true,
-				mobile: true,
 				fatherOccupation: true,
-				noOfFamilyMembers: true,
-				noOfEarningMembers: true,
-				familyIncome: true,
-				earningPerMember: true,
-				collegeIntakeYear: true,
+				numberofdirectfamilyMembers: true,
+				totalEarningMembers: true,
+				totalFamilyIncome: true,
+				eachFamilyIncome: true,
+				jgecIntakeYear: true,
+				jgecPassingYear: true,
 				extraCurricularActivities: true,
-				address: true,
-				hsPercentage: true,
-				btechResults: true,
-				department: true,
-				achievements: true,
-				jobDetails: true,
+				percentHigherSecondary: true,
+				sem_1st: true,
+				sem_2nd: true,
+				sem_3rd: true,
+				sem_4th: true,
+				sem_5th: true,
+				average: true,
+				residentialAddress: true,
+				specialAchievement: true,
+				jobCampusing: true,
 				scholarshipDetails: {
 					select: {
 						id: true,
@@ -512,24 +579,30 @@ export const applicantDetails = asyncHandler(
 			select: {
 				id: true,
 				name: true,
+				email: true,
+				contactHome: true,
+				contact: true,
+				department: true,
 				studentId: true,
 				dob: true,
-				homeContactNo: true,
-				email: true,
-				mobile: true,
 				fatherOccupation: true,
-				noOfFamilyMembers: true,
-				noOfEarningMembers: true,
-				familyIncome: true,
-				earningPerMember: true,
-				collegeIntakeYear: true,
+				numberofdirectfamilyMembers: true,
+				totalEarningMembers: true,
+				totalFamilyIncome: true,
+				eachFamilyIncome: true,
+				jgecIntakeYear: true,
+				jgecPassingYear: true,
 				extraCurricularActivities: true,
-				address: true,
-				hsPercentage: true,
-				btechResults: true,
-				department: true,
-				achievements: true,
-				jobDetails: true,
+				percentHigherSecondary: true,
+				sem_1st: true,
+				sem_2nd: true,
+				sem_3rd: true,
+				sem_4th: true,
+				sem_5th: true,
+				average: true,
+				residentialAddress: true,
+				specialAchievement: true,
+				jobCampusing: true,
 				scholarshipDetails: {
 					select: {
 						id: true,
@@ -568,23 +641,30 @@ export const applyForScholarship = asyncHandler(
 			scholarshipId,
 			studentId,
 			dob,
-			homeContactNo,
+			contactHome,
+			contact,
 			email,
-			mobile,
 			fatherOccupation,
-			noOfFamilyMembers,
-			noOfEarningMembers,
-			familyIncome,
-			earningPerMember,
-			collegeIntakeYear,
+			numberofdirectfamilyMembers,
+			totalEarningMembers,
+			totalFamilyIncome,
+			eachFamilyIncome,
+			jgecIntakeYear,
+			jgecPassingYear,
+			percentHigherSecondary,
 			extraCurricularActivities,
-			address,
-			hsPercentage,
-			btechResults, // "1st sem: 8.5, 2nd sem: 8.5, 3rd sem: 8.5, 4th sem: 8.5, 5th sem: 8.5, 6th sem: 8.5, 7th sem: 8.5, 8th sem: 8.5"
+			residentialAddress,
+			sem_1st,
+			sem_2nd,
+			sem_3rd,
+			sem_4th,
+			sem_5th,
+			average,
 			department,
-			achievements,
-			jobDetails,
+			specialAchievement,
 		} = req.body;
+
+		console.log(req.body);
 
 		// Check if all required fields are provided
 		if (
@@ -593,17 +673,21 @@ export const applyForScholarship = asyncHandler(
 				scholarshipId &&
 				studentId &&
 				dob &&
+				contactHome &&
+				contact &&
 				email &&
-				mobile &&
 				fatherOccupation &&
-				noOfFamilyMembers &&
-				familyIncome &&
-				earningPerMember &&
-				collegeIntakeYear &&
-				address &&
-				hsPercentage &&
-				btechResults &&
-				department
+				numberofdirectfamilyMembers &&
+				totalEarningMembers &&
+				totalFamilyIncome &&
+				eachFamilyIncome &&
+				jgecIntakeYear &&
+				jgecPassingYear &&
+				percentHigherSecondary &&
+				extraCurricularActivities &&
+				residentialAddress &&
+				department &&
+				specialAchievement
 			)
 		) {
 			res.status(400).json({
@@ -639,47 +723,59 @@ export const applyForScholarship = asyncHandler(
 			await prisma.scholarshipApplication.create({
 				data: {
 					name,
-					scholarshipId: parseInt(scholarshipId),
+					email,
+					contactHome,
+					contact,
+					department,
 					studentId,
 					dob,
-					homeContactNo,
-					email,
-					mobile,
 					fatherOccupation,
-					noOfFamilyMembers,
-					noOfEarningMembers,
-					familyIncome,
-					earningPerMember,
-					collegeIntakeYear,
+					numberofdirectfamilyMembers,
+					totalEarningMembers,
+					totalFamilyIncome,
+					eachFamilyIncome,
+					jgecIntakeYear,
+					jgecPassingYear,
 					extraCurricularActivities,
-					address,
-					hsPercentage,
-					btechResults,
-					department,
-					achievements,
-					jobDetails,
+					percentHigherSecondary,
+					sem_1st,
+					sem_2nd,
+					sem_3rd,
+					sem_4th,
+					sem_5th,
+					average,
+					residentialAddress,
+					specialAchievement,
+					jobCampusing: "",
+					scholarshipId: parseInt(scholarshipId),
 				},
 				select: {
 					id: true,
 					name: true,
+					email: true,
+					contactHome: true,
+					contact: true,
+					department: true,
 					studentId: true,
 					dob: true,
-					homeContactNo: true,
-					email: true,
-					mobile: true,
 					fatherOccupation: true,
-					noOfFamilyMembers: true,
-					noOfEarningMembers: true,
-					familyIncome: true,
-					earningPerMember: true,
-					collegeIntakeYear: true,
+					numberofdirectfamilyMembers: true,
+					totalEarningMembers: true,
+					totalFamilyIncome: true,
+					eachFamilyIncome: true,
+					jgecIntakeYear: true,
+					jgecPassingYear: true,
 					extraCurricularActivities: true,
-					address: true,
-					hsPercentage: true,
-					btechResults: true,
-					department: true,
-					achievements: true,
-					jobDetails: true,
+					percentHigherSecondary: true,
+					sem_1st: true,
+					sem_2nd: true,
+					sem_3rd: true,
+					sem_4th: true,
+					sem_5th: true,
+					average: true,
+					residentialAddress: true,
+					specialAchievement: true,
+					jobCampusing: true,
 					scholarshipDetails: {
 						select: {
 							id: true,
@@ -692,6 +788,26 @@ export const applyForScholarship = asyncHandler(
 					},
 				},
 			});
+
+		console.log("hello", newScholarshipApplication);
+
+		const getScholarshipName = await prisma.scholarships.findFirst({
+			where: {
+				id: parseInt(scholarshipId),
+			},
+			select: {
+				name: true,
+			},
+		});
+
+		await sendMail(
+			email,
+			"Scholarship Application",
+			ScholarshipApplicationMail(
+				name,
+				getScholarshipName?.name || "Scholarship"
+			)
+		);
 
 		res.status(201).json({
 			message: "Scholarship applied successfully",

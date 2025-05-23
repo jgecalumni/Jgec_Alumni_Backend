@@ -77,16 +77,13 @@ export const ScholarshipApplicationMail = (
             <p style="font-size: 16px; color: #555;">
                 Your application is currently under review by our team. The review process involves verifying your
                 academic achievements,
-                financial status, and supporting documents. This typically takes about <strong>10 working days</strong>.
+                financial status, and many more. 
                 Once the review
-                is complete, we will notify you of the decision via email.
+                is complete, we will provide the list in the notice section.
             </p>
 
             <p style="font-size: 16px; color: #555;">
-                If additional information is required, our team will contact you directly. In the meantime, if you have
-                any questions, please
-                feel free to reach out to us at <a href="mailto:scholarship-support@example.com"
-                    style="color: #0066cc;">scholarship-support@example.com</a>.
+                If additional information is required, our team will contact you directly. In the meantime, If you have any questions, feel free to reach out Dr. Mousam Chatterjee (+91 9433480022).
             </p>
 
             <p style="font-size: 16px; font-weight: bold; color: #333;">

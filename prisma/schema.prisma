@@ -19,7 +19,7 @@ model members {
   email               String   @unique
   password            String
   studentId           String?  @unique
-  nickname            String?   @default("")
+  nickname            String?  @default("")
   passingYear         Int
   department          String
   residentialAddress  String
@@ -56,30 +56,36 @@ model Scholarships {
 }
 
 model ScholarshipApplication {
-  id                        Int          @id @default(autoincrement())
-  scholarshipId             Int
-  scholarshipDetails        Scholarships @relation(fields: [scholarshipId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  name                      String
-  studentId                 String
-  dob                       String
-  homeContactNo             String?
-  email                     String
-  mobile                    String
-  fatherOccupation          String
-  noOfFamilyMembers         Int
-  noOfEarningMembers        Int?
-  familyIncome              Int
-  earningPerMember          Int?
-  collegeIntakeYear         Int
-  extraCurricularActivities String?
-  address                   String
-  hsPercentage              String
-  btechResults              String
-  department                String
-  achievements              String?
-  jobDetails                String?      @default("")
-  createdAt                 DateTime     @default(now())
-  updatedAt                 DateTime     @default(now())
+  id                          Int          @id @default(autoincrement())
+  scholarshipId               Int
+  scholarshipDetails          Scholarships @relation(fields: [scholarshipId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  name                        String
+  studentId                   Int
+  dob                         String
+  contactHome                 Int
+  contact                     Int
+  email                       String
+  numberofdirectfamilyMembers Int
+  fatherOccupation            String
+  totalEarningMembers         Int?
+  totalFamilyIncome           Int
+  eachFamilyIncome            Int?
+  jgecIntakeYear              String
+  jgecPassingYear             String
+  extraCurricularActivities   String
+  percentHigherSecondary      String
+  sem_1st                     String?
+  sem_2nd                     String?
+  sem_3rd                     String?
+  sem_4th                     String?
+  sem_5th                     String?
+  average                     String
+  department                  String
+  residentialAddress          String
+  specialAchievement          String
+  jobCampusing                String       @default("")
+  createdAt                   DateTime     @default(now())
+  updatedAt                   DateTime     @updatedAt
 }
 
 model Notice {
