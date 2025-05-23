@@ -49,7 +49,9 @@ export const uploadMultipleOnCloudinary = async (
 		return [];
 	}
 };
-export const uploadReceiptToCloudinary = (buffer: Buffer): Promise<string> => {
+export const uploadReceiptToCloudinary = (
+	buffer: Buffer
+): Promise<{ secure_url: string; public_id: string }> => {
 	return new Promise((resolve, reject) => {
 		const now = new Date();
 		const month = now.toLocaleString("default", { month: "long" }); // e.g., "May"
@@ -61,7 +63,7 @@ export const uploadReceiptToCloudinary = (buffer: Buffer): Promise<string> => {
 			(error, result) => {
 				if (error) return reject(error);
 				if (result && result.secure_url) {
-					resolve(result.secure_url);
+					resolve({ secure_url: result.secure_url, public_id: result.public_id });
 				} else {
 					reject(
 						new Error(

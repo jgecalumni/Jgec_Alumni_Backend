@@ -39,7 +39,9 @@ export const receiptRequest = asyncHandler(
 				transactionId &&
 				donationFor &&
 				phone &&
-				date && panId && gender
+				date &&
+				panId &&
+				gender
 			)
 		) {
 			res.status(400).json({
@@ -208,7 +210,7 @@ export const deleteReceipt = asyncHandler(
 			where: { id: parseInt(id) },
 		});
 		// delete image from cloudinary
-		await deleteFromCloudinary(receipt.receipt_public_id || "");
+		await deleteFromCloudinary(receipt.generatedReceipt_public_id || "");
 		res.status(200).json({
 			success: true,
 			message: "Receipt deleted successfully",
@@ -242,7 +244,11 @@ export const approveReceipt = asyncHandler(
 		const generatedPdf = await uploadReceiptToCloudinary(pdfBuffer);
 		await prisma.receiptDetails.update({
 			where: { id: parseInt(id) },
-			data: { paymentStatus: "APPROVED", generatedReceipt: generatedPdf },
+			data: {
+				paymentStatus: "APPROVED",
+				generatedReceipt: generatedPdf.secure_url,
+				generatedReceipt_public_id: generatedPdf.public_id,
+			},
 		});
 
 		await sendMailWithAttachment(
