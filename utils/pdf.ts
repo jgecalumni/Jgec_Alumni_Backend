@@ -30,7 +30,17 @@ export const generateReceiptPDF = async (receipt: any): Promise<Buffer> => {
 		// Registration Number
 
 		// Received from
-		doc.text(`Received with thanks from ${receipt.gender==="Male"?"Sri":"Smt"}: ${receipt.name}`, 50, doc.y);
+		doc.text(
+			`Received with thanks ${
+				receipt.gender === "Company"
+					? ""
+					: receipt.gender === "Male"
+					? "from Sri"
+					: "from Smt"
+			}: ${receipt.name}`,
+			50,
+			doc.y
+		);
 		// let receivedFromY = doc.y;
 		// doc.underline(220, receivedFromY, 200, 1);
 
