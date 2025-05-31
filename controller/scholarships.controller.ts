@@ -666,39 +666,38 @@ export const applyForScholarship = asyncHandler(
 			specialAchievement,
 		} = req.body;
 
-		console.log(req.body);
 
 		// Check if all required fields are provided
-		if (
-			!(
-				name &&
-				scholarshipId &&
-				studentId &&
-				dob &&
-				contactHome &&
-				contact &&
-				email &&
-				fatherOccupation &&
-				numberofdirectfamilyMembers &&
-				totalEarningMembers &&
-				totalFamilyIncome &&
-				eachFamilyIncome &&
-				jgecIntakeYear &&
-				jgecPassingYear &&
-				percentHigherSecondary &&
-				extraCurricularActivities &&
-				residentialAddress &&
-				department &&
-				specialAchievement
-			)
-		) {
-			res.status(400).json({
-				success: false,
-				message: "Please provide all required fields",
-				error: true,
-			});
-			return;
-		}
+		// if (
+		// 	!(
+		// 		name &&
+		// 		scholarshipId &&
+		// 		studentId &&
+		// 		dob &&
+		// 		contactHome &&
+		// 		contact &&
+		// 		email &&
+		// 		fatherOccupation &&
+		// 		numberofdirectfamilyMembers &&
+		// 		totalEarningMembers &&
+		// 		totalFamilyIncome &&
+		// 		eachFamilyIncome &&
+		// 		jgecIntakeYear &&
+		// 		jgecPassingYear &&
+		// 		percentHigherSecondary &&
+		// 		extraCurricularActivities &&
+		// 		residentialAddress &&
+		// 		department &&
+		// 		specialAchievement
+		// 	)
+		// ) {
+		// 	res.status(400).json({
+		// 		success: false,
+		// 		message: "Please provide all required fields",
+		// 		error: true,
+		// 	});
+		// 	return;
+		// }
 
 		// Check if user already applied for scholarship
 		const isExist = await prisma.scholarships.findFirst({
