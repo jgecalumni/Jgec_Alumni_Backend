@@ -666,45 +666,45 @@ export const applyForScholarship = asyncHandler(
 			specialAchievement,
 		} = req.body;
 
-
-		// Check if all required fields are provided
-		// if (
-		// 	!(
-		// 		name &&
-		// 		scholarshipId &&
-		// 		studentId &&
-		// 		dob &&
-		// 		contactHome &&
-		// 		contact &&
-		// 		email &&
-		// 		fatherOccupation &&
-		// 		numberofdirectfamilyMembers &&
-		// 		totalEarningMembers &&
-		// 		totalFamilyIncome &&
-		// 		eachFamilyIncome &&
-		// 		jgecIntakeYear &&
-		// 		jgecPassingYear &&
-		// 		percentHigherSecondary &&
-		// 		extraCurricularActivities &&
-		// 		residentialAddress &&
-		// 		department &&
-		// 		specialAchievement
-		// 	)
-		// ) {
-		// 	res.status(400).json({
-		// 		success: false,
-		// 		message: "Please provide all required fields",
-		// 		error: true,
-		// 	});
-		// 	return;
-		// }
+		console.log(studentId);
+		
+		if (
+			!(
+				name &&
+				scholarshipId &&
+				studentId &&
+				dob &&
+				contactHome &&
+				contact &&
+				email &&
+				fatherOccupation &&
+				numberofdirectfamilyMembers &&
+				totalEarningMembers &&
+				totalFamilyIncome &&
+				eachFamilyIncome &&
+				jgecIntakeYear &&
+				jgecPassingYear &&
+				percentHigherSecondary &&
+				extraCurricularActivities &&
+				residentialAddress &&
+				department &&
+				specialAchievement
+			)
+		) {
+			res.status(400).json({
+				success: false,
+				message: "Please provide all required fields",
+				error: true,
+			});
+			return;
+		}
 
 		// Check if user already applied for scholarship
 		const isExist = await prisma.scholarships.findFirst({
 			where: {
 				scholarshipApplicants: {
 					some: {
-						studentId: studentId,
+						studentId: String(studentId),
 					},
 				},
 			},
@@ -725,10 +725,10 @@ export const applyForScholarship = asyncHandler(
 				data: {
 					name,
 					email,
-					contactHome,
-					contact,
+					contactHome: String(contactHome),
+					contact: String(contact),
 					department,
-					studentId,
+					studentId: String(studentId),
 					dob,
 					fatherOccupation,
 					numberofdirectfamilyMembers,
@@ -746,9 +746,7 @@ export const applyForScholarship = asyncHandler(
 					sem_5th,
 					average,
 					residentialAddress,
-					specialAchievement,
-					jobCampusing: "",
-					scholarshipId: parseInt(scholarshipId),
+					specialAchievement,					scholarshipId: parseInt(scholarshipId),
 				},
 				select: {
 					id: true,
@@ -790,7 +788,6 @@ export const applyForScholarship = asyncHandler(
 				},
 			});
 
-		console.log("hello", newScholarshipApplication);
 
 		const getScholarshipName = await prisma.scholarships.findFirst({
 			where: {

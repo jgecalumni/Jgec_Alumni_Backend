@@ -60,10 +60,10 @@ model ScholarshipApplication {
   scholarshipId               Int
   scholarshipDetails          Scholarships @relation(fields: [scholarshipId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   name                        String
-  studentId                   Int
+  studentId                   String
   dob                         String
-  contactHome                 Int
-  contact                     Int
+  contactHome                 String
+  contact                     String
   email                       String
   numberofdirectfamilyMembers Int
   fatherOccupation            String
