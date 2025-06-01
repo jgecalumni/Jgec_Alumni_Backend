@@ -366,8 +366,6 @@ export const updateScholarship = asyncHandler(
 			department,
 		} = req.body;
 
-		
-
 		const providerImage = (req as any).file;
 		const { id } = req.params;
 
@@ -667,7 +665,7 @@ export const applyForScholarship = asyncHandler(
 		} = req.body;
 
 		console.log(studentId);
-		
+
 		if (
 			!(
 				name &&
@@ -707,6 +705,18 @@ export const applyForScholarship = asyncHandler(
 			},
 		});
 
+		const applicantCount = await prisma.scholarshipApplication.count({
+			where: { studentId: String(studentId) },
+		});
+		if (applicantCount >= 3) {
+			res.status(400).json({
+				success: false,
+				message: "You can only apply for up to 3 scholarships",
+				error: true,
+			});
+			return;
+		}
+
 		if (isExist) {
 			res.status(400).json({
 				success: false,
@@ -743,7 +753,8 @@ export const applyForScholarship = asyncHandler(
 					sem_5th,
 					average,
 					residentialAddress,
-					specialAchievement,					scholarshipId: parseInt(scholarshipId),
+					specialAchievement,
+					scholarshipId: parseInt(scholarshipId),
 				},
 				select: {
 					id: true,
@@ -784,7 +795,6 @@ export const applyForScholarship = asyncHandler(
 					},
 				},
 			});
-
 
 		const getScholarshipName = await prisma.scholarships.findFirst({
 			where: {
