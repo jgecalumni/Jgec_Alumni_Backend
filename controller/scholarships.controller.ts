@@ -700,13 +700,10 @@ export const applyForScholarship = asyncHandler(
 		}
 
 		// Check if user already applied for scholarship
-		const isExist = await prisma.scholarships.findFirst({
+		const isExist = await prisma.scholarshipApplication.findFirst({
 			where: {
-				scholarshipApplicants: {
-					some: {
-						studentId: String(studentId),
-					},
-				},
+				scholarshipId: parseInt(scholarshipId),
+				studentId: String(studentId),
 			},
 		});
 
