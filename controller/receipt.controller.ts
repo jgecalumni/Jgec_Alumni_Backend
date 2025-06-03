@@ -91,24 +91,31 @@ export const receiptRequest = asyncHandler(
 			});
 			return;
 		}
+		if (!email) {
+			res.status(201).json({
+				success: true,
+				message: "Receipt request created successfully",
+				data: receiptDetails,
+			});
+		} else {
+			await sendMail(
+				email,
+				"Receipt Request Confirmation",
+				ReceiptSubmitMail(name, amount, transactionId, donationFor)
+			);
 
-		await sendMail(
-			email,
-			"Receipt Request Confirmation",
-			ReceiptSubmitMail(name, amount, transactionId, donationFor)
-		);
-
-		// send email to admin
-		await sendMail(
-			process.env.EMAIL_USERNAME as string,
-			"New Receipt Request",
-			ReceiptApprovalMail(name, amount, transactionId, donationFor)
-		);
-		res.status(201).json({
-			success: true,
-			message: "Receipt request created successfully",
-			data: receiptDetails,
-		});
+			// send email to admin
+			await sendMail(
+				process.env.EMAIL_USERNAME as string,
+				"New Receipt Request",
+				ReceiptApprovalMail(name, amount, transactionId, donationFor)
+			);
+			res.status(201).json({
+				success: true,
+				message: "Receipt request created successfully",
+				data: receiptDetails,
+			});
+		}
 	}
 );
 
