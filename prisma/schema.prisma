@@ -172,15 +172,15 @@ model GalleryImages {
 model ReceiptDetails {
   id                         Int      @id @default(autoincrement())
   name                       String
-  email                      String
+  email                      String?
   amount                     Int
   transactionId              String
   gender                     String   @default("Male")
-  panId                      String
+  panId                      String?
   date                       String   @default("")
   donationFor                String
   phone                      String
-  passoutYear                Int      @default(0)
+  passoutYear                Int?      @default(0)
   paymentStatus              String   @default("Pending")
   receipt                    String?
   receipt_public_id          String?

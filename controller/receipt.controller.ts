@@ -31,19 +31,7 @@ export const receiptRequest = asyncHandler(
 		} = req.body;
 		const receipt = (req as any).file;
 
-		if (
-			!(
-				name &&
-				amount &&
-				email &&
-				transactionId &&
-				donationFor &&
-				phone &&
-				date &&
-				panId &&
-				gender
-			)
-		) {
+		if (!(name && amount && transactionId && donationFor && date && gender)) {
 			res.status(400).json({
 				success: false,
 				message: "Please provide all required fields",
@@ -250,23 +238,29 @@ export const approveReceipt = asyncHandler(
 				generatedReceipt_public_id: generatedPdf.public_id,
 			},
 		});
-
-		await sendMailWithAttachment(
-			receipt.email,
-			"Receipt Request Approved",
-			approvedReceiptMail(
-				receipt.name,
-				receipt.amount,
-				receipt.transactionId || "Not Given",
-				receipt.donationFor
-			),
-			pdfBuffer,
-			receipt.name
-		);
-		res.status(200).json({
-			success: true,
-			message: "Receipt approved successfully",
-		});
+		if (!receipt.email) {
+			res.status(200).json({
+				success: true,
+				message: "Receipt denied successfully",
+			});
+		} else {
+			await sendMailWithAttachment(
+				receipt.email,
+				"Receipt Request Approved",
+				approvedReceiptMail(
+					receipt.name,
+					receipt.amount,
+					receipt.transactionId || "Not Given",
+					receipt.donationFor
+				),
+				pdfBuffer,
+				receipt.name
+			);
+			res.status(200).json({
+				success: true,
+				message: "Receipt approved successfully",
+			});
+		}
 	}
 );
 export const denyReceipt = asyncHandler(async (req: Request, res: Response) => {
@@ -286,18 +280,25 @@ export const denyReceipt = asyncHandler(async (req: Request, res: Response) => {
 		where: { id: parseInt(id) },
 		data: { paymentStatus: "DENIED" },
 	});
-	await sendMail(
-		receipt.email,
-		"Receipt Request Denied",
-		denyReceiptMail(
-			receipt.name,
-			receipt.amount,
-			receipt.transactionId || "Not Given",
-			receipt.donationFor
-		)
-	);
-	res.status(200).json({
-		success: true,
-		message: "Receipt denied successfully",
-	});
+	if (!receipt.email) {
+		res.status(200).json({
+			success: true,
+			message: "Receipt denied successfully",
+		});
+	} else {
+		await sendMail(
+			receipt.email,
+			"Receipt Request Denied",
+			denyReceiptMail(
+				receipt.name,
+				receipt.amount,
+				receipt.transactionId || "Not Given",
+				receipt.donationFor
+			)
+		);
+		res.status(200).json({
+			success: true,
+			message: "Receipt denied successfully",
+		});
+	}
 });
