@@ -248,7 +248,7 @@ export const approveReceipt = asyncHandler(
 		if (!receipt.email) {
 			res.status(200).json({
 				success: true,
-				message: "Receipt denied successfully",
+				message: "Email not provided",
 			});
 		} else {
 			await sendMailWithAttachment(
