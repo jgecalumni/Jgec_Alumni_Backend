@@ -436,7 +436,7 @@ export const updateScholarship = asyncHandler(
 				ageLimit,
 				amountDetails,
 				semRequire,
-				isActive: isActive === "Yes" ? true : false,
+				isActive: isActive === "Yes" || isActive === "true" ? true : false,
 				department,
 			},
 			select: {
