@@ -72,7 +72,7 @@ model ScholarshipApplication {
   eachFamilyIncome            Int?
   jgecIntakeYear              String
   jgecPassingYear             String
-  extraCurricularActivities   String
+  extraCurricularActivities   String?      @db.VarChar(1000)
   percentHigherSecondary      String
   sem_1st                     String?
   sem_2nd                     String?
@@ -82,7 +82,7 @@ model ScholarshipApplication {
   average                     String
   department                  String
   residentialAddress          String
-  specialAchievement          String
+  specialAchievement          String       @db.VarChar(1000)
   jobCampusing                String       @default("")
   createdAt                   DateTime     @default(now())
   updatedAt                   DateTime     @updatedAt
@@ -91,7 +91,7 @@ model ScholarshipApplication {
 model Notice {
   id             Int      @id @default(autoincrement())
   title          String
-  description    String @db.VarChar(4000)
+  description    String   @db.VarChar(4000)
   date           String
   link           String?
   link_public_id String?
@@ -180,7 +180,7 @@ model ReceiptDetails {
   date                       String   @default("")
   donationFor                String
   phone                      String
-  passoutYear                Int?      @default(0)
+  passoutYear                Int?     @default(0)
   paymentStatus              String   @default("Pending")
   receipt                    String?
   receipt_public_id          String?

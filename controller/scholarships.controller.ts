@@ -826,6 +826,7 @@ export const applyForScholarship = asyncHandler(
 export const deleteApplication = asyncHandler(
 	async (req: Request, res: Response) => {
 		const { id } = req.params;
+		
 		await prisma.scholarshipApplication.delete({ where: { id: parseInt(id) } });
 		res.status(200).json({
 			message: "Application deleted successfully",

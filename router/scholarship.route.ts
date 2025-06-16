@@ -32,6 +32,6 @@ router.route("/delete/:id").delete(authentication, deleteScholarship);
 router.route("/applications/all").get(getAllScholarshipApplications);
 router.route("/applicant/:id").get(applicantDetails);
 router.route("/apply").post(applyForScholarship);
-router.route("/applicants/delete/:id").post(authentication, deleteApplication);
+router.route("/applicants/delete/:id").delete( deleteApplication);
 
 export default router;
