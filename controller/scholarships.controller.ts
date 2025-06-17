@@ -574,8 +574,8 @@ export const getAllScholarshipApplications = asyncHandler(
 export const applicantDetails = asyncHandler(
 	async (req: Request, res: Response) => {
 		const { id } = req.params;
-		const applicant = await prisma.scholarshipApplication.findFirst({
-			where: { id: parseInt(id) },
+		const applicant = await prisma.scholarshipApplication.findMany({
+			where: { studentId: id },
 			select: {
 				id: true,
 				name: true,
@@ -708,7 +708,7 @@ export const applyForScholarship = asyncHandler(
 		const applicantCount = await prisma.scholarshipApplication.count({
 			where: { studentId: String(studentId) },
 		});
-		if (applicantCount >= 3) {
+		if (applicantCount >= 5) {
 			res.status(400).json({
 				success: false,
 				message: "You can only apply for up to 3 scholarships",
