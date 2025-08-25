@@ -3,18 +3,22 @@ import express from "express";
 import authentication from "../middleware/authentication";
 import { upload } from "../middleware/photo-upload";
 import {
+	addAgmMomDocs,
 	addauditReportDocs,
 	addGivingBackDocs,
 	addKanchenjungaDocs,
 	addScholarshipDocs,
+	deleteAgmMomkDocs,
 	deleteauditReportkDocs,
 	deleteGivingBackDocs,
 	deleteKanchenjungaDocs,
 	deleteScholarshipDocs,
+	getAllAgmMomDocs,
 	getAllauditReportDocs,
 	getAllGivingBackDocs,
 	getAllKanchenjungaDocs,
 	getAllScholarshipDocs,
+	updateAgmMomDocs,
 	updateauditReportDocs,
 	updateGivingBackDocs,
 	updateKanchenjungaDocs,
@@ -65,5 +69,16 @@ router
 router
 	.route("/delete/auditReportDocs/:id")
 	.delete(authentication, deleteauditReportkDocs);
+
+router.route("/AgmMomDocs").get(getAllAgmMomDocs);
+router
+	.route("/add/AgmMomDocs")
+	.post(authentication, upload.single("file"), addAgmMomDocs);
+router
+	.route("/update/AgmMomDocs/:id")
+	.patch(authentication, upload.single("file"), updateAgmMomDocs);
+router
+	.route("/delete/AgmMomDocs/:id")
+	.delete(authentication, deleteAgmMomkDocs);
 
 export default router;
