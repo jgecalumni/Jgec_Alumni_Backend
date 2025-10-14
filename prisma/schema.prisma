@@ -79,6 +79,7 @@ model ScholarshipApplication {
   sem_3rd                     String?
   sem_4th                     String?
   sem_5th                     String?
+  rank                        Int?
   average                     String
   department                  String
   residentialAddress          String

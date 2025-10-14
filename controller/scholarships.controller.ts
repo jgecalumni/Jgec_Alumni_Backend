@@ -659,6 +659,7 @@ export const applyForScholarship = asyncHandler(
 			sem_3rd,
 			sem_4th,
 			sem_5th,
+			rank,
 			average,
 			department,
 			specialAchievement,
@@ -686,7 +687,7 @@ export const applyForScholarship = asyncHandler(
 				extraCurricularActivities &&
 				residentialAddress &&
 				department &&
-				specialAchievement
+				specialAchievement && rank
 			)
 		) {
 			res.status(400).json({
@@ -737,6 +738,7 @@ export const applyForScholarship = asyncHandler(
 					department,
 					studentId: String(studentId),
 					dob,
+					rank,
 					fatherOccupation,
 					numberofdirectfamilyMembers,
 					totalEarningMembers,
@@ -765,6 +767,7 @@ export const applyForScholarship = asyncHandler(
 					department: true,
 					studentId: true,
 					dob: true,
+					rank:true,
 					fatherOccupation: true,
 					numberofdirectfamilyMembers: true,
 					totalEarningMembers: true,
