@@ -197,3 +197,17 @@ model ReceiptDetails {
   createdAt                  DateTime @default(now())
   updatedAt                  DateTime @default(now())
 }
+model Contribution {
+  id             Int      @id @default(autoincrement())
+  slNo           Int
+  nameOfAluminus String
+  graduationYear Int
+  amount         Float
+  depositedOn    String
+  mobileNo       String?
+  email          String?
+  pdfLink        String?
+  pdfLink_public_id String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}

@@ -278,3 +278,83 @@ export const denyReceiptMail = (
 </body>
 `;
 };
+
+export const contributionReceiptMail = (
+	name: string,
+	amount: number,
+	graduationYear: number
+) => {
+	return `
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f9f9fb; color: #333; line-height: 1.6;">
+    <div style="max-width: 600px; margin: 20px auto; background: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+        <!-- Header Section -->
+        <div style="background-color: #516bb7; color: #ffffff; text-align: center; padding: 25px;">
+            <h1 style="margin: 0; font-size: 22px; font-weight: 600;">Contribution Receipt</h1>
+        </div>
+        
+        <!-- Content Section -->
+        <div style="padding: 25px;">
+            <h4 style="color: #516bb7; font-size: 18px; margin-bottom: 10px;">Dear ${name},</h4>
+            <p style="font-size: 15px; margin-bottom: 15px;">Thank you for your generous contribution to the JGEC Alumni Association. Your support helps us strengthen our community and support current and future students.</p>
+            <div style="background: #f4f4f9; padding: 15px; border-radius: 8px;">
+                <p style="font-size: 15px;"><strong>Contributor Name:</strong> ${name}</p>
+                <p style="font-size: 15px;"><strong>Graduation Year:</strong> ${graduationYear}</p>
+                <p style="font-size: 15px;"><strong>Contribution Amount:</strong> ₹${amount}</p>
+            </div>
+            <p style="font-size: 15px; margin-top: 15px;">Your contribution receipt is attached to this email for your records.</p>
+            <p style="font-size: 15px;">If you have any questions, feel free to reach out Dr. Mousam Chatterjee (+91 9433480022).</p>
+            <div>
+                <h2 style="color: #080A0D; font-size: 14px;">Best Regards,</h2>
+                <p style="font-size: 14px;">
+                    The <strong>JGEC Alumni Association</strong><br>
+                    <em>"Driven by Gratitude, Bonded with Nostalgia"</em>
+                </p>
+            </div>
+        </div>
+        
+        <!-- Footer Section -->
+        <div style="background-color: #f4f4f9; text-align: center; padding: 15px; font-size: 14px; color: #555;">
+            <p>If you have any questions, feel free to reach us at <a href="mailto:alumnijgec320@gmail.com" style="color: #516bb7; text-decoration: none;">alumnijgec320@gmail.com</a>.</p>
+        </div>
+    </div>
+</body>
+`;
+};
+
+// Bulk Contribution Report Mail Template
+export const bulkContributionReportMail = (contributionCount: number, totalAmount: number) => {
+	return `
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f9f9fb; color: #333; line-height: 1.6;">
+    <div style="max-width: 600px; margin: 20px auto; background: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+        <!-- Header Section -->
+        <div style="background-color: #516bb7; color: #ffffff; text-align: center; padding: 25px;">
+            <h1 style="margin: 0; font-size: 22px; font-weight: 600;">Alumni Contribution Report</h1>
+        </div>
+        
+        <!-- Content Section -->
+        <div style="padding: 25px;">
+            <h4 style="color: #516bb7; font-size: 18px; margin-bottom: 10px;">Dear Admin,</h4>
+            <p style="font-size: 15px; margin-bottom: 15px;">A new bulk contribution upload has been processed successfully. Here's the summary:</p>
+            <div style="background: #f4f4f9; padding: 15px; border-radius: 8px;">
+                <p style="font-size: 15px;"><strong>Total Contributors:</strong> ${contributionCount}</p>
+                <p style="font-size: 15px;"><strong>Total Amount:</strong> ₹${totalAmount}</p>
+                <p style="font-size: 15px;"><strong>Generated On:</strong> ${new Date().toLocaleDateString()}</p>
+            </div>
+            <p style="font-size: 15px; margin-top: 15px;">The detailed contribution report is attached to this email.</p>
+            <div>
+                <h2 style="color: #080A0D; font-size: 14px;">Best Regards,</h2>
+                <p style="font-size: 14px;">
+                    The <strong>JGEC Alumni Association</strong> System<br>
+                    <em>"Driven by Gratitude, Bonded with Nostalgia"</em>
+                </p>
+            </div>
+        </div>
+        
+        <!-- Footer Section -->
+        <div style="background-color: #f4f4f9; text-align: center; padding: 15px; font-size: 14px; color: #555;">
+            <p>If you have any questions, feel free to reach us at <a href="mailto:alumnijgec320@gmail.com" style="color: #516bb7; text-decoration: none;">alumnijgec320@gmail.com</a>.</p>
+        </div>
+    </div>
+</body>
+`;
+};

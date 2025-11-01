@@ -77,3 +77,46 @@ export const uploadReceiptToCloudinary = (
 		streamifier.createReadStream(buffer).pipe(stream);
 	});
 };
+export const uploadContriReceiptToCloudinary = (
+	buffer: Buffer,
+	name: string // 👈 pass contributor name
+): Promise<{ secure_url: string; public_id: string }> => {
+	return new Promise((resolve, reject) => {
+		const now = new Date();
+		const month = now.toLocaleString("default", { month: "long" }); 
+		const year = now.getFullYear(); // e.g., 2025
+		const folderName = `receipts/${year}-${month}`; 
+
+		const safeName = name
+			.replace(/[^a-z0-9]/gi, "_") 
+			.toLowerCase();
+
+		
+		const publicId = `${safeName}_${Date.now()}`;
+
+		const stream = cloudinary.uploader.upload_stream(
+			{
+				resource_type: "auto",
+				folder: folderName,
+				public_id: publicId,
+			},
+			(error, result) => {
+				if (error) return reject(error);
+				if (result && result.secure_url) {
+					resolve({
+						secure_url: result.secure_url,
+						public_id: result.public_id,
+					});
+				} else {
+					reject(
+						new Error(
+							"Upload failed: result is undefined or missing secure_url"
+						)
+					);
+				}
+			}
+		);
+
+		streamifier.createReadStream(buffer).pipe(stream);
+	});
+};
