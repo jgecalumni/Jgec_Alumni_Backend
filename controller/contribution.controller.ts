@@ -101,12 +101,9 @@ export const getAllContributions = asyncHandler(
           // but only do that if mobileNo is actually a string column
         }
 
-        // Attach OR only if any entry exists
         if (orArr.length > 0) where.OR = orArr;
       }
 
-      // Debug log (optional) — remove in production
-      console.log("Contributions where:", JSON.stringify(where));
 
       // Paginated data and count
       const [contributions, totalCount] = await Promise.all([
