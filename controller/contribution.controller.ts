@@ -73,39 +73,35 @@ export const getAllContributions = asyncHandler(
       const pageSize = Number(limit) || 10;
       const skip = (pageNum - 1) * pageSize;
 
-      // Build where safely
       const where: any = {};
 
-      // Graduation year filter (AND)
-      if (graduationYear !== undefined && String(graduationYear).trim() !== "" && !isNaN(Number(graduationYear))) {
+      // 🎓 Graduation year filter
+      if (
+        graduationYear !== undefined &&
+        String(graduationYear).trim() !== "" &&
+        !isNaN(Number(graduationYear))
+      ) {
         where.graduationYear = Number(graduationYear);
       }
 
-      // Build OR for search only if search is non-empty
+      // 🔍 Search filter (case-insensitive simulation)
       if (search && typeof search === "string" && search.trim().length > 0) {
         const s = search.trim();
 
-        const orArr: any[] = [];
+        const orArr: any[] = [
+          { nameOfAluminus: { contains: s } },
+          { email: { contains: s } },
+        ];
 
-        // nameOfAluminus & email are expected strings -> use contains (case-sensitive if Prisma does not support insensitive)
-        orArr.push({ nameOfAluminus: { contains: s } });
-        orArr.push({ email: { contains: s } });
-
-        // mobileNo: if numeric search, include numeric equals; otherwise skip contains (not valid for numeric fields)
         const possibleNum = Number(s);
         if (!isNaN(possibleNum)) {
           orArr.push({ mobileNo: possibleNum });
-        } else {
-          // if mobileNo is stored as string in your DB (e.g. varchar), you can enable this:
-          // orArr.push({ mobileNo: { contains: s } });
-          // but only do that if mobileNo is actually a string column
         }
 
-        if (orArr.length > 0) where.OR = orArr;
+        where.OR = orArr;
       }
 
-
-      // Paginated data and count
+      // 🧾 Paginated contributions
       const [contributions, totalCount] = await Promise.all([
         prisma.contribution.findMany({
           where,
@@ -115,17 +111,15 @@ export const getAllContributions = asyncHandler(
         prisma.contribution.count({ where }),
       ]);
 
-      
-      const statsWhere = where;
+      // 📊 Stats
       const allContributions = await prisma.contribution.findMany({
-        where: statsWhere,
+        where,
         select: { amount: true, graduationYear: true, depositedOn: true },
       });
 
       const allYearsRaw = await prisma.contribution.findMany({
         distinct: ["graduationYear"],
         select: { graduationYear: true },
-        orderBy: { graduationYear: "desc" },
       });
 
       const allGraduationYears = allYearsRaw
@@ -136,7 +130,10 @@ export const getAllContributions = asyncHandler(
         (sum, c) => sum + (Number(c.amount) || 0),
         0
       );
-      const uniqueBatches = new Set(allContributions.map((c) => c.graduationYear)).size;
+
+      const uniqueBatches = new Set(
+        allContributions.map((c) => c.graduationYear)
+      ).size;
 
       const now = new Date();
       const currentMonth = now.getMonth();
@@ -145,8 +142,20 @@ export const getAllContributions = asyncHandler(
       const monthlyContributions = allContributions.filter((c) => {
         if (!c.depositedOn) return false;
         const date = new Date(c.depositedOn);
-        return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+        return (
+          date.getMonth() === currentMonth && date.getFullYear() === currentYear
+        );
       }).length;
+
+      // 🧾 Collect all PDFs + contributor names (filtered)
+      const pdfData = await prisma.contribution.findMany({
+        where,
+        select: {
+          nameOfAluminus: true,
+          pdfLink: true, // ✅ ensure this matches your schema field name
+          graduationYear: true,
+        },
+      });
 
       res.status(200).json({
         success: true,
@@ -164,6 +173,11 @@ export const getAllContributions = asyncHandler(
           monthlyContributions,
         },
         allGraduationYears,
+        pdfLinksAndNames: pdfData.map((c) => ({
+          name: c.nameOfAluminus,
+          pdf: c.pdfLink,
+          graduationYear: c.graduationYear,
+        })),
       });
     } catch (error) {
       console.error("Error fetching contributions:", error);
@@ -175,6 +189,7 @@ export const getAllContributions = asyncHandler(
     }
   }
 );
+
 
 
 // Get a single contribution by ID
