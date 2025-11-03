@@ -419,13 +419,13 @@ export const bulkCreateContributions = asyncHandler(
 			}
 
 			const formatted = newContributions.map((c: any) => ({
-				slNo: parseInt(c.SlNo),
+				slNo: Number(c.SlNo),
 				nameOfAluminus: c.NameOfAlumnus?.toString() || "Unknown",
-				graduationYear: parseInt(c.GraduationYear) || 0,
-				amount: parseFloat(c.AmountINR),
-				depositedOn: c.DepositedOn,
-				mobileNo: c.MobileNo?.toString(),
-				email: c.Email || null,
+				graduationYear: Number(c.GraduationYear) || 0,
+				amount: Number(c.AmountINR) || 0,
+				depositedOn: c.DepositedOn?.toString() || null,
+				mobileNo: c.MobileNo ? c.MobileNo.toString() : null,
+				email: c.Email?.toString() || null,
 			}));
 
 			const created = await prisma.$transaction(
