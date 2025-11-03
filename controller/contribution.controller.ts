@@ -65,132 +65,130 @@ export const createContribution = asyncHandler(
 
 // Get all contributions with pagination and search
 export const getAllContributions = asyncHandler(
-  async (req: Request, res: Response) => {
-    const { search, limit, page, graduationYear } = req.query;
+	async (req: Request, res: Response) => {
+		const { search, limit, page, graduationYear } = req.query;
 
-    try {
-      const pageNum = Number(page) || 1;
-      const pageSize = Number(limit) || 10;
-      const skip = (pageNum - 1) * pageSize;
+		try {
+			const pageNum = Number(page) || 1;
+			const pageSize = Number(limit) || 10;
+			const skip = (pageNum - 1) * pageSize;
 
-      const where: any = {};
+			const where: any = {};
 
-      // 🎓 Graduation year filter
-      if (
-        graduationYear !== undefined &&
-        String(graduationYear).trim() !== "" &&
-        !isNaN(Number(graduationYear))
-      ) {
-        where.graduationYear = Number(graduationYear);
-      }
+			// 🎓 Graduation year filter
+			if (
+				graduationYear !== undefined &&
+				String(graduationYear).trim() !== "" &&
+				!isNaN(Number(graduationYear))
+			) {
+				where.graduationYear = Number(graduationYear);
+			}
 
-      // 🔍 Search filter (case-insensitive simulation)
-      if (search && typeof search === "string" && search.trim().length > 0) {
-        const s = search.trim();
+			// 🔍 Search filter (case-insensitive simulation)
+			if (search && typeof search === "string" && search.trim().length > 0) {
+				const s = search.trim();
 
-        const orArr: any[] = [
-          { nameOfAluminus: { contains: s } },
-          { email: { contains: s } },
-        ];
+				const orArr: any[] = [
+					{ nameOfAluminus: { contains: s } },
+					{ email: { contains: s } },
+				];
 
-        const possibleNum = Number(s);
-        if (!isNaN(possibleNum)) {
-          orArr.push({ mobileNo: possibleNum });
-        }
+				const possibleNum = Number(s);
+				if (!isNaN(possibleNum)) {
+					orArr.push({ mobileNo: possibleNum });
+				}
 
-        where.OR = orArr;
-      }
+				where.OR = orArr;
+			}
 
-      // 🧾 Paginated contributions
-      const [contributions, totalCount] = await Promise.all([
-        prisma.contribution.findMany({
-          where,
-          skip,
-          take: pageSize,
-        }),
-        prisma.contribution.count({ where }),
-      ]);
+			// 🧾 Paginated contributions
+			const [contributions, totalCount] = await Promise.all([
+				prisma.contribution.findMany({
+					where,
+					skip,
+					take: pageSize,
+				}),
+				prisma.contribution.count({ where }),
+			]);
 
-      // 📊 Stats
-      const allContributions = await prisma.contribution.findMany({
-        where,
-        select: { amount: true, graduationYear: true, depositedOn: true },
-      });
+			// 📊 Stats
+			const allContributions = await prisma.contribution.findMany({
+				where,
+				select: { amount: true, graduationYear: true, depositedOn: true },
+			});
 
-      const allYearsRaw = await prisma.contribution.findMany({
-        distinct: ["graduationYear"],
-        select: { graduationYear: true },
-      });
+			const allYearsRaw = await prisma.contribution.findMany({
+				distinct: ["graduationYear"],
+				select: { graduationYear: true },
+			});
 
-      const allGraduationYears = allYearsRaw
-        .map((y) => y.graduationYear)
-        .filter((y) => y !== null && !isNaN(Number(y)));
+			const allGraduationYears = allYearsRaw
+				.map((y) => y.graduationYear)
+				.filter((y) => y !== null && !isNaN(Number(y)));
 
-      const totalAmount = allContributions.reduce(
-        (sum, c) => sum + (Number(c.amount) || 0),
-        0
-      );
+			const totalAmount = allContributions.reduce(
+				(sum, c) => sum + (Number(c.amount) || 0),
+				0
+			);
 
-      const uniqueBatches = new Set(
-        allContributions.map((c) => c.graduationYear)
-      ).size;
+			const uniqueBatches = new Set(
+				allContributions.map((c) => c.graduationYear)
+			).size;
 
-      const now = new Date();
-      const currentMonth = now.getMonth();
-      const currentYear = now.getFullYear();
+			const now = new Date();
+			const currentMonth = now.getMonth();
+			const currentYear = now.getFullYear();
 
-      const monthlyContributions = allContributions.filter((c) => {
-        if (!c.depositedOn) return false;
-        const date = new Date(c.depositedOn);
-        return (
-          date.getMonth() === currentMonth && date.getFullYear() === currentYear
-        );
-      }).length;
+			const monthlyContributions = allContributions.filter((c) => {
+				if (!c.depositedOn) return false;
+				const date = new Date(c.depositedOn);
+				return (
+					date.getMonth() === currentMonth && date.getFullYear() === currentYear
+				);
+			}).length;
 
-      // 🧾 Collect all PDFs + contributor names (filtered)
-      const pdfData = await prisma.contribution.findMany({
-        where,
-        select: {
-          nameOfAluminus: true,
-          pdfLink: true, // ✅ ensure this matches your schema field name
-          graduationYear: true,
-        },
-      });
+			// 🧾 Collect all PDFs + contributor names (filtered)
+			const pdfData = await prisma.contribution.findMany({
+				where,
+				select: {
+					nameOfAluminus: true,
+					pdfLink: true, // ✅ ensure this matches your schema field name
+					graduationYear: true,
+				},
+			});
 
-      res.status(200).json({
-        success: true,
-        error: false,
-        message: "Contributions fetched successfully",
-        data: contributions,
-        docCount: totalCount,
-        totalPages: Math.ceil(totalCount / pageSize),
-        page: pageNum,
-        limit: pageSize,
-        stats: {
-          totalAmount,
-          totalContributions: totalCount,
-          uniqueBatches,
-          monthlyContributions,
-        },
-        allGraduationYears,
-        pdfLinksAndNames: pdfData.map((c) => ({
-          name: c.nameOfAluminus,
-          pdf: c.pdfLink,
-          graduationYear: c.graduationYear,
-        })),
-      });
-    } catch (error) {
-      console.error("Error fetching contributions:", error);
-      res.status(500).json({
-        success: false,
-        message: "Internal server error",
-        error: true,
-      });
-    }
-  }
+			res.status(200).json({
+				success: true,
+				error: false,
+				message: "Contributions fetched successfully",
+				data: contributions,
+				docCount: totalCount,
+				totalPages: Math.ceil(totalCount / pageSize),
+				page: pageNum,
+				limit: pageSize,
+				stats: {
+					totalAmount,
+					totalContributions: totalCount,
+					uniqueBatches,
+					monthlyContributions,
+				},
+				allGraduationYears,
+				pdfLinksAndNames: pdfData.map((c) => ({
+					name: c.nameOfAluminus,
+					pdf: c.pdfLink,
+					graduationYear: c.graduationYear,
+				})),
+			});
+		} catch (error) {
+			console.error("Error fetching contributions:", error);
+			res.status(500).json({
+				success: false,
+				message: "Internal server error",
+				error: true,
+			});
+		}
+	}
 );
-
-
 
 // Get a single contribution by ID
 export const getContributionById = asyncHandler(
@@ -396,16 +394,22 @@ export const bulkCreateContributions = asyncHandler(
 
 		try {
 			// 1️⃣ Skip duplicates based on slNo
-			const slNos = contributions.map((c: any) => parseInt(c.SlNo));
+			const slNos = contributions
+				.map((c: any) => parseInt(c.SlNo))
+				.filter((num: number) => !isNaN(num));
+			console.log(slNos);
+
 			const existing = await prisma.contribution.findMany({
 				where: { slNo: { in: slNos } },
 				select: { slNo: true },
 			});
-			const existingIds = new Set(existing.map((e) => e.slNo));
+			const existingIds = new Set<number>(existing.map((e) => Number(e.slNo)));
 
-			const newContributions = contributions.filter(
-				(c: any) => !existingIds.has(parseInt(c.SlNo))
-			);
+			const newContributions = contributions.filter((c: any) => {
+				const slNo = Number(c.SlNo);
+				return !isNaN(slNo) && !existingIds.has(slNo);
+			});
+
 
 			if (newContributions.length === 0) {
 				res.status(200).json({
