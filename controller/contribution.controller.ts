@@ -397,7 +397,6 @@ export const bulkCreateContributions = asyncHandler(
 			const slNos = contributions
 				.map((c: any) => parseInt(c.SlNo))
 				.filter((num: number) => !isNaN(num));
-			console.log(slNos);
 
 			const existing = await prisma.contribution.findMany({
 				where: { slNo: { in: slNos } },
@@ -410,7 +409,6 @@ export const bulkCreateContributions = asyncHandler(
 				return !isNaN(slNo) && !existingIds.has(slNo);
 			});
 
-
 			if (newContributions.length === 0) {
 				res.status(200).json({
 					success: true,
@@ -422,7 +420,7 @@ export const bulkCreateContributions = asyncHandler(
 
 			const formatted = newContributions.map((c: any) => ({
 				slNo: parseInt(c.SlNo),
-				nameOfAluminus: c.NameOfAlumnus,
+				nameOfAluminus: c.NameOfAlumnus?.toString() || "Unknown",
 				graduationYear: parseInt(c.GraduationYear) || 0,
 				amount: parseFloat(c.AmountINR),
 				depositedOn: c.DepositedOn,
