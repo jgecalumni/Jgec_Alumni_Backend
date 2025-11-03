@@ -379,6 +379,10 @@ export const sendContributionReceipt = asyncHandler(
 
 // Bulk create contributions from Excel/CSV data
 
+import fs from "fs";
+import path from "path";
+import { format } from "date-fns";
+
 export const bulkCreateContributions = asyncHandler(
 	async (req: Request, res: Response) => {
 		const contributions = req.body;
@@ -393,15 +397,26 @@ export const bulkCreateContributions = asyncHandler(
 		}
 
 		try {
-			// 1️⃣ Skip duplicates based on slNo
+			// 1️⃣ Extract valid slNo numbers
 			const slNos = contributions
 				.map((c: any) => parseInt(c.SlNo))
 				.filter((num: number) => !isNaN(num));
 
+			if (slNos.length === 0) {
+				res.status(400).json({
+					success: false,
+					message: "No valid SlNo values provided.",
+					error: true,
+				});
+				return;
+			}
+
+			// 2️⃣ Skip already existing entries
 			const existing = await prisma.contribution.findMany({
 				where: { slNo: { in: slNos } },
 				select: { slNo: true },
 			});
+
 			const existingIds = new Set<number>(existing.map((e) => Number(e.slNo)));
 
 			const newContributions = contributions.filter((c: any) => {
@@ -418,6 +433,7 @@ export const bulkCreateContributions = asyncHandler(
 				return;
 			}
 
+			// 3️⃣ Format data for Prisma
 			const formatted = newContributions.map((c: any) => ({
 				slNo: Number(c.SlNo),
 				nameOfAluminus: c.NameOfAlumnus?.toString() || "Unknown",
@@ -432,42 +448,63 @@ export const bulkCreateContributions = asyncHandler(
 				formatted.map((data) => prisma.contribution.create({ data }))
 			);
 
+			// 4️⃣ Create monthly folder (e.g., "November_2025")
+			const monthFolder = format(new Date(), "MMMM_yyyy");
+			const baseDir = path.join(
+				process.cwd(),
+				"public",
+				"contributions",
+				monthFolder
+			);
+			fs.mkdirSync(baseDir, { recursive: true });
+
 			const updatedRecords = [];
+
 			for (const contrib of created) {
 				try {
-					// generate individual receipt PDF (as Buffer)
+					// Generate PDF buffer
 					const pdfBuffer = await generateContributionReceiptPDF(contrib);
 
-					// upload to Cloudinary
-					const uploaded = await uploadContriReceiptToCloudinary(
-						pdfBuffer,
-						contrib.nameOfAluminus
-					);
+					// Sanitize file name
+					const safeName = contrib.nameOfAluminus
+						.replace(/[^\w\s]/gi, "")
+						.replace(/\s+/g, "_");
 
-					// update that record with Cloudinary info
+					// Define path inside the monthly folder
+					const fileName = `receipt_${contrib.slNo}_${safeName}.pdf`;
+					const pdfPath = path.join(baseDir, fileName);
+					fs.writeFileSync(pdfPath, pdfBuffer);
+
+					// Save PDF locally
+					fs.writeFileSync(pdfPath, pdfBuffer);
+					const localhostUrl = `https://backend.jgecalumni.in/public/contributions/${monthFolder}/${fileName}`;
+
 					const updated = await prisma.contribution.update({
 						where: { id: contrib.id },
 						data: {
-							pdfLink: uploaded.secure_url,
-							pdfLink_public_id: uploaded.public_id,
+							pdfLink: localhostUrl, 
+							pdfLink_public_id: null,
 						},
 					});
 
 					updatedRecords.push(updated);
 				} catch (err) {
-					console.error(`Error processing SL No ${contrib.slNo}:`, err);
+					console.error(
+						`Error generating receipt for SL No ${contrib.slNo}:`,
+						err
+					);
 				}
 			}
 
 			res.status(201).json({
 				success: true,
-				message: `${updatedRecords.length} contributions created successfully with individual PDF receipts.`,
+				message: `${updatedRecords.length} contributions created successfully. PDFs saved under '${monthFolder}'.`,
 				data: {
 					count: updatedRecords.length,
-					contributions: updatedRecords.map((r) => ({
+					files: updatedRecords.map((r) => ({
 						slNo: r.slNo,
 						name: r.nameOfAluminus,
-						pdf: r.pdfLink,
+						filePath: r.pdfLink,
 					})),
 				},
 			});

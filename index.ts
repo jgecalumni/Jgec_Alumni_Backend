@@ -13,15 +13,29 @@ import ScholarshipRoute from "./router/scholarship.route";
 import NoticeRoute from "./router/notice.route";
 import EventRoute from "./router/event.route";
 import DocRoute from "./router/document.route";
-import GalleryRoute from "./router/gallery.route"
+import GalleryRoute from "./router/gallery.route";
 import ReceiptRoute from "./router/receipt.route";
 import ContributionRoute from "./router/contribution.route";
 
 import { allCounts } from "./controller/count.controller";
 import authentication from "./middleware/authentication";
+import path from "path";
 
 // configure middlewares
 app.use(cookieParser());
+app.use(
+	"/public",
+	cors({
+		origin: [
+			process.env.FORNTEND_URI_DEV as string,
+			process.env.FORNTEND_URI_PROD as string,
+			process.env.FORNTEND_URI_MAIN as string,
+			process.env.FORNTEND_URI_MAIN_TWO as string,
+		],
+	}),
+	express.static(path.join(process.cwd(), "public"))
+);
+
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(
@@ -52,6 +66,5 @@ app.use("/v1/api/gallery", GalleryRoute);
 app.use("/v1/api/all-count", authentication, allCounts);
 app.use("/v1/api/receipt", ReceiptRoute);
 app.use("/v1/api/contributions", ContributionRoute);
-
 
 app.listen(port, () => console.log("🚀[Server]: listening on port " + port));
