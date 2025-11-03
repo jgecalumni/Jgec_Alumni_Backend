@@ -14,8 +14,8 @@ const router = express.Router();
 
 // Routes for contribution
 router.route("/").post(authentication, createContribution);
-router.route("/").get( getAllContributions);
-router.route("/bulk").post( bulkCreateContributions);
+router.route("/").get(authentication, getAllContributions);
+router.route("/bulk").post(authentication, bulkCreateContributions);
 router.route("/:id").get(authentication, getContributionById);
 router.route("/:id").put(authentication, updateContribution);
 router.route("/:id").delete(authentication, deleteContribution);
