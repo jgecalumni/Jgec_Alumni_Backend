@@ -140,6 +140,9 @@ export const getAllEvents = asyncHandler(
 					},
 				},
 			},
+			orderBy: {
+				createdAt: "desc",
+			},
 		});
 
 		res.status(200).json({
@@ -152,7 +155,7 @@ export const getAllEvents = asyncHandler(
 			page: Number(page) || 1,
 			limit: Number(limit) || 10,
 		});
-	}
+	},
 );
 
 export const updateEvent = asyncHandler(async (req: Request, res: Response) => {
@@ -210,10 +213,11 @@ export const updateEvent = asyncHandler(async (req: Request, res: Response) => {
 		});
 		return;
 	}
-	let fileLinkExist = "",fileLinkExistId = null;
+	let fileLinkExist = "",
+		fileLinkExistId = null;
 	if (!event_thumbnail) {
 		fileLinkExist = isExist.event_thumbnail;
-		fileLinkExistId = isExist.event_thumbnail_id
+		fileLinkExistId = isExist.event_thumbnail_id;
 	}
 
 	let fileLink = null;
@@ -305,7 +309,7 @@ export const deleteEvent = asyncHandler(async (req: Request, res: Response) => {
 		where: { id: parseInt(id) },
 	});
 	const deleteThumbnail = await deleteFromCloudinary(
-		event.event_thumbnail_id || ""
+		event.event_thumbnail_id || "",
 	);
 	res.status(200).json({
 		message: "Event deleted successfully",
@@ -355,5 +359,5 @@ export const getEventByID = asyncHandler(
 			error: false,
 			success: true,
 		});
-	}
+	},
 );
