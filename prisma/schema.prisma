@@ -111,7 +111,7 @@ model Event {
   time               String
   location           String          @db.VarChar(500)
   hostName           String
-  hostDetails        String
+  hostDetails        String          @db.VarChar(500)
   createdAt          DateTime        @default(now())
   updatedAt          DateTime        @default(now())
   schedule           EventSchedule[]
@@ -197,17 +197,18 @@ model ReceiptDetails {
   createdAt                  DateTime @default(now())
   updatedAt                  DateTime @default(now())
 }
+
 model Contribution {
-  id             Int      @id @default(autoincrement())
-  slNo           Int
-  nameOfAluminus String
-  graduationYear Int
-  amount         Float
-  depositedOn    String
-  mobileNo       String?
-  email          String?
-  pdfLink        String?
+  id                Int      @id @default(autoincrement())
+  slNo              Int
+  nameOfAluminus    String
+  graduationYear    Int
+  amount            Float
+  depositedOn       String
+  mobileNo          String?
+  email             String?
+  pdfLink           String?
   pdfLink_public_id String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 }
